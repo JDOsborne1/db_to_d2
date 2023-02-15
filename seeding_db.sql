@@ -1,0 +1,86 @@
+-- Create the database
+CREATE DATABASE testdb;
+
+-- Use the database
+USE testdb;
+
+-- Create a users table
+CREATE TABLE users (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  first_name VARCHAR(50),
+  last_name VARCHAR(50),
+  email VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Populate the users table with fake data
+INSERT INTO users (first_name, last_name, email, created_at)
+SELECT
+  SUBSTRING(MD5(RAND()) FROM 1 FOR 8),
+  SUBSTRING(MD5(RAND()) FROM 1 FOR 8),
+  CONCAT(SUBSTRING(MD5(RAND()) FROM 1 FOR 8), '@example.com'),
+  DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 365) DAY)
+FROM
+  (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5) AS numbers
+CROSS JOIN
+  (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5) AS more_numbers
+CROSS JOIN
+  (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5) AS even_more_numbers
+;
+
+-- Create a posts table
+CREATE TABLE posts (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  title VARCHAR(255),
+  content TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Populate the posts table with fake data
+INSERT INTO posts (user_id, title, content, created_at)
+SELECT
+  users.id,
+  SUBSTRING(MD5(RAND()) FROM 1 FOR 8),
+  SUBSTRING(MD5(RAND()) FROM 1 FOR 100),
+  DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 365) DAY)
+FROM
+  users
+CROSS JOIN
+  (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5) AS numbers
+CROSS JOIN
+  (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5) AS more_numbers
+CROSS JOIN
+  (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5) AS even_more_numbers
+;
+
+-- Create a comments table
+CREATE TABLE comments (
+  id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  post_id INT,
+  user_id INT,
+  content TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- Populate the comments table with fake data
+INSERT INTO comments (post_id, user_id, content, created_at)
+SELECT
+  posts.id,
+  users.id,
+  SUBSTRING(MD5(RAND()) FROM 1 FOR 100),
+  DATE_SUB(NOW(), INTERVAL FLOOR(RAND() * 365) DAY)
+FROM
+  posts
+JOIN
+  users ON users.id <> posts.user_id
+CROSS JOIN
+  (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5) AS numbers
+CROSS JOIN
+  (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5) AS more_numbers
+CROSS JOIN
+  (SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 UNION SELECT 5) AS even_more_numbers
+;
