@@ -22,7 +22,7 @@ services:
     depends_on:
       - db
   blazegraph:
-    image: blazegraph:2.1.5
+    image: metaphacts/blazegraph-basic 
     restart: always
     environment:
       JAVA_OPTS: "-Xmx4g"
@@ -33,14 +33,4 @@ services:
       - ./data:/data
     ports:
       - "9999:9999"
-  workbench:
-    image: ontotext/workbench
-    restart: always
-    environment:
-      JAVA_OPTS: "-Xmx1g"
-      BLAZEGRAPH_HOST: blazegraph
-      BLAZEGRAPH_PORT: 9999
-    ports:
-      - "8080:8080"
-    depends_on:
-      - blazegraph
+
