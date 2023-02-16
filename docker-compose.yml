@@ -21,3 +21,26 @@ services:
       - "8080:80"
     depends_on:
       - db
+  blazegraph:
+    image: blazegraph:2.1.5
+    restart: always
+    environment:
+      JAVA_OPTS: "-Xmx4g"
+      BZ_JOURNAL_WRITABILITY: "true"
+      BZ_JOURNAL_EARLY_TERM: "true"
+      BZ_JOURNAL_MAX_SIZE: "1073741824"
+    volumes:
+      - ./data:/data
+    ports:
+      - "9999:9999"
+  workbench:
+    image: ontotext/workbench
+    restart: always
+    environment:
+      JAVA_OPTS: "-Xmx1g"
+      BLAZEGRAPH_HOST: blazegraph
+      BLAZEGRAPH_PORT: 9999
+    ports:
+      - "8080:8080"
+    depends_on:
+      - blazegraph
