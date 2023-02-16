@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 	"fmt"
-	"strings"
+	// "strings"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -36,11 +36,13 @@ type Schema struct {
 
 func main() {
 	// Connect to the MySQL database
-	db, err := sql.Open("mysql", "username:password@tcp(host:port)/database")
+	db, err := sql.Open("mysql", "root:example_password@tcp(localhost:8080)/database")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
+
+	fmt.Println("successfully connected to DB")
 
 	// Retrieve the table and column information from the information schema
 	rows, err := db.Query("SELECT TABLE_NAME, COLUMN_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_KEY, EXTRA, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME, UPDATE_RULE, DELETE_RULE FROM INFORMATION_SCHEMA.COLUMNS LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ON COLUMN_NAME = REFERENCED_COLUMN_NAME AND TABLE_NAME = REFERENCED_TABLE_NAME WHERE TABLE_SCHEMA = DATABASE() ORDER BY TABLE_NAME, ORDINAL_POSITION")
@@ -98,67 +100,67 @@ func main() {
 
 	fmt.Println(schema)
 
-	// Create a map of namespace prefixes and URIs
-	prefixes := map[string]string{
-		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
-		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-		"owl": "http://www.w3.org/2002/07/owl#",
-		"db": "http://example.com/database#",
-	}
+	// // Create a map of namespace prefixes and URIs
+	// prefixes := map[string]string{
+	// 	"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+	// 	"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+	// 	"owl": "http://www.w3.org/2002/07/owl#",
+	// 	"db": "http://example.com/database#",
+	// }
 
-	// Initialize the triples string
-	triples := ""
+	// // Initialize the triples string
+	// triples := ""
 
-	// Add namespace declarations
-	for prefix, uri := range prefixes {
-		triples += fmt.Sprintf("@prefix %s: <%s> .\n", prefix, uri)
-	}
+	// // Add namespace declarations
+	// for prefix, uri := range prefixes {
+	// 	triples += fmt.Sprintf("@prefix %s: <%s> .\n", prefix, uri)
+	// }
 
-	// Add triples for each table and column
-	for _, table := range schema.Tables {
-		// Add the table as a resource
-		triples += fmt.Sprintf("\ndb:%s a owl:Class ;\n", table.Name)
+	// // Add triples for each table and column
+	// for _, table := range schema.Tables {
+	// 	// Add the table as a resource
+	// 	triples += fmt.Sprintf("\ndb:%s a owl:Class ;\n", table.Name)
 
-		// Add triples for each column
-		for _, column := range table.Columns {
-			// Add the column as a resource
-			triples += fmt.Sprintf("\tdb:%s a owl:DatatypeProperty ;\n", column.Name)
+	// 	// Add triples for each column
+	// 	for _, column := range table.Columns {
+	// 		// Add the column as a resource
+	// 		triples += fmt.Sprintf("\tdb:%s a owl:DatatypeProperty ;\n", column.Name)
 
-			// Add triples for the column type
-			triples += fmt.Sprintf("\t\trdfs:range \"%s\"^^xsd:string ;\n", column.Type)
+	// 		// Add triples for the column type
+	// 		triples += fmt.Sprintf("\t\trdfs:range \"%s\"^^xsd:string ;\n", column.Type)
 
-			// Add triples for the nullable flag
-			if column.Nullable {
-				triples += "\t\trdfs:subClassOf [ a owl:Restriction ; owl:onProperty owl:maxCardinality ; owl:cardinality \"0\"^^xsd:nonNegativeInteger ] ;\n"
-			}
+	// 		// Add triples for the nullable flag
+	// 		if column.Nullable {
+	// 			triples += "\t\trdfs:subClassOf [ a owl:Restriction ; owl:onProperty owl:maxCardinality ; owl:cardinality \"0\"^^xsd:nonNegativeInteger ] ;\n"
+	// 		}
 
-			// Add triples for the primary key
-			if column.Key == "PRI" {
-				triples += "\t\trdfs:subClassOf [ a owl:Restriction ; owl:onProperty owl:maxCardinality ; owl:cardinality \"1\"^^xsd:nonNegativeInteger ] ;\n"
-			}
+	// 		// Add triples for the primary key
+	// 		if column.Key == "PRI" {
+	// 			triples += "\t\trdfs:subClassOf [ a owl:Restriction ; owl:onProperty owl:maxCardinality ; owl:cardinality \"1\"^^xsd:nonNegativeInteger ] ;\n"
+	// 		}
 
-			// Add triples for the foreign key reference
-			if column.Reference != nil {
-				triples += fmt.Sprintf("\t\trdfs:range db:%s ;\n", column.Reference.Table)
-				triples += fmt.Sprintf("\t\tdb:%s rdfs:subPropertyOf [ a owl:ObjectProperty ; owl:inverseOf db:%s ] ;\n", column.Name, column.Reference.Column)
-			}
+	// 		// Add triples for the foreign key reference
+	// 		if column.Reference != nil {
+	// 			triples += fmt.Sprintf("\t\trdfs:range db:%s ;\n", column.Reference.Table)
+	// 			triples += fmt.Sprintf("\t\tdb:%s rdfs:subPropertyOf [ a owl:ObjectProperty ; owl:inverseOf db:%s ] ;\n", column.Name, column.Reference.Column)
+	// 		}
 
-			// Add triples for the extra flag
-			if column.Extra != "" {
-				triples += fmt.Sprintf("\t\tdb:%s rdfs:comment \"%s\"^^xsd:string ;\n", column.Name, column.Extra)
-			}
+	// 		// Add triples for the extra flag
+	// 		if column.Extra != "" {
+	// 			triples += fmt.Sprintf("\t\tdb:%s rdfs:comment \"%s\"^^xsd:string ;\n", column.Name, column.Extra)
+	// 		}
 
-            // Add a semicolon after each column
-            triples += ";\n"
-		}
+    //         // Add a semicolon after each column
+    //         triples += ";\n"
+	// 	}
 
-		// Remove the trailing semicolon after the last column
-		triples = strings.TrimSuffix(triples, ";\n")
+	// 	// Remove the trailing semicolon after the last column
+	// 	triples = strings.TrimSuffix(triples, ";\n")
 
-		// Add a closing bracket for the table
-		triples += ".\n"
-	}
+	// 	// Add a closing bracket for the table
+	// 	triples += ".\n"
+	// }
 
-	// Print the triples to the console
-	fmt.Println(triples)
+	// // Print the triples to the console
+	// fmt.Println(triples)
 }
