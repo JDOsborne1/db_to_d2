@@ -36,16 +36,21 @@ type Schema struct {
 
 func main() {
 	// Connect to the MySQL database
-	db, err := sql.Open("mysql", "root:example_password@tcp(localhost:8080)/database")
+	db, err := sql.Open("mysql", "root:example_password@tcp(localhost:3306)/testdb")
 	if err != nil {
 		panic(err.Error())
 	}
 	defer db.Close()
 
-	fmt.Println("successfully connected to DB")
 
 	// Retrieve the table and column information from the information schema
-	rows, err := db.Query("SELECT TABLE_NAME, COLUMN_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_KEY, EXTRA, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME, UPDATE_RULE, DELETE_RULE FROM INFORMATION_SCHEMA.COLUMNS LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE ON COLUMN_NAME = REFERENCED_COLUMN_NAME AND TABLE_NAME = REFERENCED_TABLE_NAME WHERE TABLE_SCHEMA = DATABASE() ORDER BY TABLE_NAME, ORDINAL_POSITION")
+	rows, err := db.Query(`
+	SELECT C.TABLE_NAME, C.COLUMN_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_KEY, EXTRA, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME 
+FROM INFORMATION_SCHEMA.COLUMNS C
+LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KC
+ON C.COLUMN_NAME = REFERENCED_COLUMN_NAME AND C.TABLE_NAME = REFERENCED_TABLE_NAME 
+WHERE C.TABLE_SCHEMA = 'testdb'
+ORDER BY TABLE_NAME, KC.ORDINAL_POSITION;`)
 	if err != nil {
 		panic(err.Error())
 	}
@@ -57,12 +62,11 @@ func main() {
 
 	// Loop through each row and build the data structure
 	for rows.Next() {
-		var tableName, columnName, columnType, isNullable, columnKey, extra, referencedTable, referencedColumn, onUpdate, onDelete sql.NullString
-		err := rows.Scan(&tableName, &columnName, &columnType, &isNullable, &columnKey, &extra, &referencedTable, &referencedColumn, &onUpdate, &onDelete)
+		var tableName, columnName, columnType, isNullable, columnKey, extra, referencedTable, referencedColumn sql.NullString
+		err := rows.Scan(&tableName, &columnName, &columnType, &isNullable, &columnKey, &extra, &referencedTable, &referencedColumn)
 		if err != nil {
 			panic(err.Error())
 		}
-
 		// If the table name has changed, add the current table to the schema and start a new one
 		if tableName.String != currentTable {
 			if len(currentColumns) > 0 {
@@ -85,8 +89,6 @@ func main() {
 			column.Reference = &Reference{
 				Table:    referencedTable.String,
 				Column:   referencedColumn.String,
-				OnUpdate: onUpdate.String,
-				OnDelete: onDelete.String,
 			}
 		}
 
