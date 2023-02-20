@@ -42,7 +42,6 @@ func main() {
 	}
 	defer db.Close()
 
-
 	// Retrieve the table and column information from the information schema
 	rows, err := db.Query(`
 	SELECT C.TABLE_NAME, C.COLUMN_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_KEY, EXTRA, REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME 
@@ -87,8 +86,8 @@ ORDER BY TABLE_NAME, KC.ORDINAL_POSITION;`)
 
 		if referencedTable.Valid && referencedColumn.Valid {
 			column.Reference = &Reference{
-				Table:    referencedTable.String,
-				Column:   referencedColumn.String,
+				Table:  referencedTable.String,
+				Column: referencedColumn.String,
 			}
 		}
 
@@ -152,8 +151,8 @@ ORDER BY TABLE_NAME, KC.ORDINAL_POSITION;`)
 	// 			triples += fmt.Sprintf("\t\tdb:%s rdfs:comment \"%s\"^^xsd:string ;\n", column.Name, column.Extra)
 	// 		}
 
-    //         // Add a semicolon after each column
-    //         triples += ";\n"
+	//         // Add a semicolon after each column
+	//         triples += ";\n"
 	// 	}
 
 	// 	// Remove the trailing semicolon after the last column
