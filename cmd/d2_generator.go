@@ -17,6 +17,11 @@ func schema_to_d2(schema Schema) string {
 
 			if column.Key == "PRI" {
 				builder.WriteString(" {constraint: primary_key}")
+			} else if column.Key == "MUL" {
+				builder.WriteString(" {constraint: foreign_key}")
+				} else if column.Key == "UNK" {
+				builder.WriteString(" {constraint: unique}")
+
 			}
 
 			builder.WriteString("\n")
