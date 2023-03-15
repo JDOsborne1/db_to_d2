@@ -1,20 +1,25 @@
-package main 
+package main
 
 import (
 	"database/sql"
+
 	_ "github.com/go-sql-driver/mysql"
 )
 
-
-func retrieve_information_schema() *sql.Rows {
+func connect_to_db() *sql.DB {
 	db, err := sql.Open("mysql", "root:example_password@tcp(localhost:3306)/testdb")
 	if err != nil {
 		panic(err.Error())
 	}
-	defer db.Close()
+
+	return db
+
+}
+
+func information_schema_from(_db *sql.DB) *sql.Rows {
 
 	// Retrieve the table and column information from the information schema
-	rows, err := db.Query(`
+	rows, err := _db.Query(`
 	SELECT C.TABLE_NAME, C.COLUMN_NAME, COLUMN_TYPE, IS_NULLABLE, COLUMN_KEY, EXTRA, KC.TABLE_NAME, KC.COLUMN_NAME 
 	FROM INFORMATION_SCHEMA.COLUMNS C
 	LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KC
@@ -29,7 +34,7 @@ func retrieve_information_schema() *sql.Rows {
 	return rows
 }
 
-func generate_schema_from_sql_rows(_rows *sql.Rows) Schema {
+func structured_schema_from(_rows *sql.Rows) Schema {
 	var schema Schema
 	var currentTable string
 	var currentColumns []Column

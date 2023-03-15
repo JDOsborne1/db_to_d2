@@ -30,22 +30,16 @@ type Schema struct {
 	Indexes []string
 }
 
-
-
 func main() {
 	// Connect to the MySQL database
-	rows := retrieve_information_schema()
-	defer rows.Close()
+	db := connect_to_db()
+	defer db.Close()
+	db_schema := information_schema_from(db)
+	defer db_schema.Close()
 
-	schema := generate_schema_from_sql_rows(rows)
+	schema := structured_schema_from(db_schema)
 
-	fmt.Println(schema)
-
-	// triples := generate_turtle_from_schema(schema)
-	
-	// fmt.Println(triples)
-
-	d2 := generateD2Diagram(schema)
+	d2 := schema_to_d2(schema)
 
 	fmt.Println(d2)
 }
