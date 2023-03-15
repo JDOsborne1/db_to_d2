@@ -34,8 +34,7 @@ type Schema struct {
 	Indexes []string
 }
 
-func main() {
-	// Connect to the MySQL database
+func retrieve_information_schema() *sql.Rows {
 	db, err := sql.Open("mysql", "root:example_password@tcp(localhost:3306)/testdb")
 	if err != nil {
 		panic(err.Error())
@@ -53,16 +52,19 @@ ORDER BY TABLE_NAME, KC.ORDINAL_POSITION;`)
 	if err != nil {
 		panic(err.Error())
 	}
-	defer rows.Close()
 
+	return rows
+}
+
+func generate_schema_from_sql_rows(_rows *sql.Rows) Schema {
 	var schema Schema
 	var currentTable string
 	var currentColumns []Column
 
 	// Loop through each row and build the data structure
-	for rows.Next() {
+	for _rows.Next() {
 		var tableName, columnName, columnType, isNullable, columnKey, extra, referencedTable, referencedColumn sql.NullString
-		err := rows.Scan(&tableName, &columnName, &columnType, &isNullable, &columnKey, &extra, &referencedTable, &referencedColumn)
+		err := _rows.Scan(&tableName, &columnName, &columnType, &isNullable, &columnKey, &extra, &referencedTable, &referencedColumn)
 		if err != nil {
 			panic(err.Error())
 		}
@@ -98,6 +100,16 @@ ORDER BY TABLE_NAME, KC.ORDINAL_POSITION;`)
 	if len(currentColumns) > 0 {
 		schema.Tables = append(schema.Tables, Table{Name: currentTable, Columns: currentColumns})
 	}
+
+	return schema
+}
+
+func main() {
+	// Connect to the MySQL database
+	rows := retrieve_information_schema()
+	defer rows.Close()
+
+	schema := generate_schema_from_sql_rows(rows)
 
 	fmt.Println(schema)
 
