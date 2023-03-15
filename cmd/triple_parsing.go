@@ -8,14 +8,13 @@ import (
 	"strings"
 )
 
-
 func generate_turtle_from_schema(_schema Schema) string {
 	// Create a map of namespace prefixes and URIs
 	prefixes := map[string]string{
-		"rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+		"rdf":  "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
 		"rdfs": "http://www.w3.org/2000/01/rdf-schema#",
-		"owl": "http://www.w3.org/2002/07/owl#",
-		"db": "http://example.com/database#",
+		"owl":  "http://www.w3.org/2002/07/owl#",
+		"db":   "http://example.com/database#",
 	}
 
 	// Initialize the triples string
@@ -60,8 +59,8 @@ func generate_turtle_from_schema(_schema Schema) string {
 				triples += fmt.Sprintf("\t\tdb:%s rdfs:comment \"%s\"^^xsd:string ;\n", column.Name, column.Extra)
 			}
 
-	        // Add a semicolon after each column
-	        triples += ";\n"
+			// Add a semicolon after each column
+			triples += ";\n"
 		}
 
 		// Remove the trailing semicolon after the last column
