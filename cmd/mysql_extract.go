@@ -1,19 +1,35 @@
 package main
 
 import (
+	"fmt"
+	"os"
+	
 	"database/sql"
-
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func connect_to_db() *sql.DB {
-	db, err := sql.Open("mysql", "root:example_password@tcp(localhost:3306)/testdb")
-	if err != nil {
-		panic(err.Error())
-	}
+func connect_to_db() (*sql.DB, error) {
+    user := os.Getenv("DB_USER")
+    password := os.Getenv("DB_PASSWORD")
+    host := os.Getenv("DB_HOST")
+    port := os.Getenv("DB_PORT")
+    dbname := os.Getenv("DB_NAME")
+    
+    dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, host, port, dbname)
 
-	return db
+    db, err := sql.Open("mysql", dataSourceName)
+    if err != nil {
+		fmt.Println("Error using dsn:", dataSourceName)
+        return nil, err
+    }
+	
+    err = db.Ping()
+    if err != nil {
+		fmt.Println("Error using dsn:", dataSourceName)
+        return nil, err
+    }
 
+    return db, nil
 }
 
 func information_schema_from(_db *sql.DB) *sql.Rows {

@@ -32,7 +32,10 @@ type Schema struct {
 
 func main() {
 	// Connect to the MySQL database
-	db := connect_to_db()
+	db, err := connect_to_db()
+	if err != nil {
+		panic(err)
+	}
 	defer db.Close()
 	db_schema := information_schema_from(db)
 	defer db_schema.Close()
