@@ -21,13 +21,13 @@ services:
       - "8080:80"
     depends_on:
       - db
-  jena:
-    image: stain/jena-fuseki
-    restart: always
-    environment:
-      ADMIN_PASSWORD: example_password
-    volumes:
-      - ./data:/fuseki
-    ports:
-      - "3030:3030"
-      - "3031:3031"
+  # jena:
+  #   image: stain/jena-fuseki
+  #   restart: always
+  #   environment:
+  #     ADMIN_PASSWORD: example_password
+  #   volumes:
+  #     - ./data:/fuseki
+  #   ports:
+  #     - "3030:3030"
+  #     - "3031:3031"
