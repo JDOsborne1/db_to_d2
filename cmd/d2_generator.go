@@ -10,9 +10,30 @@ func schema_to_d2(schema Schema) string {
 
 	// Write table definitions
 	for _, table := range schema.Tables {
-		builder.WriteString(fmt.Sprintf("%s: {\n  shape: sql_table\n", table.Name))
+		builder.WriteString(table_to_d2(table))
+	}
 
+	// Write foreign key relationships
+	for _, table := range schema.Tables {
 		for _, column := range table.Columns {
+			if column.Reference != nil {
+				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s", table.Name, column.Name, column.Reference.Table, column.Reference.Column))
+				builder.WriteString("{target-arrowhead: {shape: cf-many}}")
+				builder.WriteString("\n\n")
+			}
+		}
+	}
+
+	return builder.String()
+}
+
+func table_to_d2(_table Table) string {
+	var builder strings.Builder
+
+
+			builder.WriteString(fmt.Sprintf("%s: {\n  shape: sql_table\n", _table.Name))
+
+		for _, column := range _table.Columns {
 			builder.WriteString(fmt.Sprintf("  %s: %s", column.Name, column.Type))
 
 			if column.Key == "PRI" {
@@ -28,18 +49,7 @@ func schema_to_d2(schema Schema) string {
 		}
 
 		builder.WriteString("}\n\n")
-	}
 
-	// Write foreign key relationships
-	for _, table := range schema.Tables {
-		for _, column := range table.Columns {
-			if column.Reference != nil {
-				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s", table.Name, column.Name, column.Reference.Table, column.Reference.Column))
-				builder.WriteString("{target-arrowhead: {shape: cf-many}}")
-				builder.WriteString("\n\n")
-			}
-		}
-	}
 
-	return builder.String()
+		return builder.String()
 }
