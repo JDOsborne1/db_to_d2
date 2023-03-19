@@ -34,7 +34,9 @@ func schema_to_d2(schema Schema) string {
 	for _, table := range schema.Tables {
 		for _, column := range table.Columns {
 			if column.Reference != nil {
-				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s\n\n", table.Name, column.Name, column.Reference.Table, column.Reference.Column))
+				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s", table.Name, column.Name, column.Reference.Table, column.Reference.Column))
+				builder.WriteString("{target-arrowhead: {shape: cf-many}}")
+				builder.WriteString("\n\n")
 			}
 		}
 	}
