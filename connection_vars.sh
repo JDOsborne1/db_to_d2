@@ -1,7 +1,7 @@
 #!/bin/bash
 
-export DB_USER="root"
-export DB_PASSWORD="example_password"
-export DB_HOST="localhost"
-export DB_PORT="3306"
-export DB_NAME="testdb"
+export D2_TARGET_DB_USER="root"
+export D2_TARGET_DB_PASSWORD="example_password"
+export D2_TARGET_DB_HOST="localhost"
+export D2_TARGET_DB_PORT="3306"
+export D2_TARGET_DB_NAME="testdb"

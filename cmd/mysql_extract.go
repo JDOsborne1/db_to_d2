@@ -9,11 +9,11 @@ import (
 )
 
 func connect_to_db() (*sql.DB, error) {
-    user := os.Getenv("DB_USER")
-    password := os.Getenv("DB_PASSWORD")
-    host := os.Getenv("DB_HOST")
-    port := os.Getenv("DB_PORT")
-    dbname := os.Getenv("DB_NAME")
+    user := os.Getenv("D2_TARGET_DB_USER")
+    password := os.Getenv("D2_TARGET_DB_PASSWORD")
+    host := os.Getenv("D2_TARGET_DB_HOST")
+    port := os.Getenv("D2_TARGET_DB_PORT")
+    dbname := os.Getenv("D2_TARGET_DB_NAME")
     
     dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, host, port, dbname)
 
