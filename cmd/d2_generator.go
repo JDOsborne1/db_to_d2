@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func schema_to_d2(schema Schema) string {
+func schema_to_d2(schema Schema, _minimalist bool) string {
 	var builder strings.Builder
 
 	// Write table definitions
@@ -13,6 +13,10 @@ func schema_to_d2(schema Schema) string {
 		builder.WriteString(fmt.Sprintf("%s: {\n  shape: sql_table\n", table.Name))
 
 		for _, column := range table.Columns {
+			if column.Key == "" && _minimalist {
+				continue
+			}
+
 			builder.WriteString(fmt.Sprintf("  %s: %s", column.Name, column.Type))
 
 			if column.Key == "PRI" {
