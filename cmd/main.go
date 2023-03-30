@@ -30,6 +30,17 @@ type Schema struct {
 	Indexes []string
 }
 
+type VirtualLink struct {
+	source_table string
+	source_column string
+	referenced_table string
+	referenced_column string
+}
+
+func augment_schema_with_virtual(_input Schema, _links VirtualLink) Schema {
+	return _input
+}
+
 func main() {
 	// Connect to the MySQL database
 	db, err := connect_to_db()
@@ -42,7 +53,9 @@ func main() {
 
 	schema := structured_schema_from(db_schema)
 
-	d2 := schema_to_d2(schema, true)
+	augmented_schema := augment_schema_with_virtual(schema, VirtualLink{})
+
+	d2 := schema_to_d2(augmented_schema, false)
 
 	fmt.Println(d2)
 }
