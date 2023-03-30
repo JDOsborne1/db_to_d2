@@ -42,7 +42,7 @@ func main() {
 
 	schema := structured_schema_from(db_schema)
 
-	d2 := schema_to_d2(schema)
+	d2 := schema_to_d2(schema, true)
 
 	fmt.Println(d2)
 }

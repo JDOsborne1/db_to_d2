@@ -5,12 +5,12 @@ import (
 	"strings"
 )
 
-func schema_to_d2(schema Schema) string {
+func schema_to_d2(schema Schema, _minimalist bool) string {
 	var builder strings.Builder
 
 	// Write table definitions
 	for _, table := range schema.Tables {
-		builder.WriteString(table_to_d2(table))
+		builder.WriteString(table_to_d2(table, _minimalist))
 	}
 
 	// Write foreign key relationships
@@ -27,13 +27,17 @@ func schema_to_d2(schema Schema) string {
 	return builder.String()
 }
 
-func table_to_d2(_table Table) string {
+func table_to_d2(_table Table, _minimalist bool) string {
 	var builder strings.Builder
 
 
 			builder.WriteString(fmt.Sprintf("%s: {\n  shape: sql_table\n", _table.Name))
 
 		for _, column := range _table.Columns {
+			if column.Key == "" && _minimalist {
+				continue
+			}
+
 			builder.WriteString(fmt.Sprintf("  %s: %s", column.Name, column.Type))
 
 			if column.Key == "PRI" {
