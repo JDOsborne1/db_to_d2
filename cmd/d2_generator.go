@@ -47,7 +47,10 @@ func table_to_d2(_table Table, _minimalist bool) string {
 				} else if column.Key == "UNK" {
 				builder.WriteString(" {constraint: unique}")
 
+			} else if column.Key == "VIRTUAL" {
+				builder.WriteString(" {constraint: foreign_key}")
 			}
+
 
 			builder.WriteString("\n")
 		}
