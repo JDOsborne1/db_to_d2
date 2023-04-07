@@ -37,11 +37,18 @@ type VirtualLink struct {
 	referenced_column string
 }
 
-func augment_tables(_input Schema, _links VirtualLink) Schema {
+func augment_schema(_input Schema, _links []VirtualLink) Schema {
+	for _, link := range _links {
+		_input = augment_tables(_input, link)
+	}
+	return _input
+}
+
+func augment_tables(_input Schema, _link VirtualLink) Schema {
 	new_tables := []Table{}
 	for _, table := range _input.Tables {
-		if table.Name == _links.source_table {
-			table = augment_columns(table, _links)
+		if table.Name == _link.source_table {
+			table = augment_columns(table, _link)
 		}
 		new_tables = append(new_tables, table)
 	}
@@ -77,12 +84,15 @@ func main() {
 
 	schema := structured_schema_from(db_schema)
 
-	augmented_schema := augment_tables(schema, VirtualLink{
+	var links []VirtualLink
+	links = append(links, VirtualLink{
 		source_table: "comments",
 		source_column: "content",
 		referenced_table: "posts",
 		referenced_column: "content",
 	})
+
+	augmented_schema := augment_schema(schema, links)
 	d2 := schema_to_d2(augmented_schema, true)
 
 	fmt.Println(d2)
