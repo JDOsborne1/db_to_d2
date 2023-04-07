@@ -35,6 +35,7 @@ func augment_columns(_table Table, _links VirtualLink) Table {
 				Column: _links.referenced_column,
 			}
 			column.Key = "VIRTUAL"
+			column.Extra = "Virtual link to " + _links.referenced_table + "." + _links.referenced_column
 		}
 		new_columns = append(new_columns, column)
 	}
