@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -38,6 +39,19 @@ type VirtualLink struct {
 }
 
 func augment_schema_with_virtual(_input Schema, _links VirtualLink) Schema {
+	for _, table := range _input.Tables {
+		if table.Name == _links.source_table {
+			for _, column := range table.Columns {
+				if column.Name == _links.source_column {
+					column.Reference = &Reference{
+						Table: _links.referenced_table,
+						Column: _links.referenced_column,
+					}
+				}
+			}
+		}
+	}
+
 	return _input
 }
 
@@ -53,9 +67,15 @@ func main() {
 
 	schema := structured_schema_from(db_schema)
 
-	augmented_schema := augment_schema_with_virtual(schema, VirtualLink{})
+	augmented_schema := augment_schema_with_virtual(schema, VirtualLink{
+		source_table: "comments",
+		source_column: "content",
+		referenced_table: "posts",
+		referenced_column: "content",
+	})
+	val, _ := json.MarshalIndent(augmented_schema, "", "  ")
+	fmt.Println(string(val))
+	// d2 := schema_to_d2(augmented_schema, false)
 
-	d2 := schema_to_d2(augmented_schema, false)
-
-	fmt.Println(d2)
+	// fmt.Println(d2)
 }
