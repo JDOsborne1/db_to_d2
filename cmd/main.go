@@ -30,8 +30,6 @@ type Schema struct {
 	Indexes []string
 }
 
-
-
 func main() {
 	// Connect to the MySQL database
 	db, err := connect_to_db()
@@ -46,9 +44,9 @@ func main() {
 
 	var links []VirtualLink
 	links = append(links, VirtualLink{
-		source_table: "comments",
-		source_column: "content",
-		referenced_table: "posts",
+		source_table:      "comments",
+		source_column:     "content",
+		referenced_table:  "posts",
 		referenced_column: "content",
 	})
 

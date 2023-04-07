@@ -1,9 +1,9 @@
 package main
 
 type VirtualLink struct {
-	source_table string
-	source_column string
-	referenced_table string
+	source_table      string
+	source_column     string
+	referenced_table  string
 	referenced_column string
 }
 
@@ -31,7 +31,7 @@ func augment_columns(_table Table, _links VirtualLink) Table {
 	for _, column := range _table.Columns {
 		if column.Name == _links.source_column {
 			column.Reference = &Reference{
-				Table: _links.referenced_table,
+				Table:  _links.referenced_table,
 				Column: _links.referenced_column,
 			}
 			column.Key = "VIRTUAL"
@@ -39,6 +39,5 @@ func augment_columns(_table Table, _links VirtualLink) Table {
 		}
 		new_columns = append(new_columns, column)
 	}
-	_table.Columns = new_columns
 	return _table
 }

@@ -3,33 +3,33 @@ package main
 import (
 	"fmt"
 	"os"
-	
+
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func connect_to_db() (*sql.DB, error) {
-    user := os.Getenv("D2_TARGET_DB_USER")
-    password := os.Getenv("D2_TARGET_DB_PASSWORD")
-    host := os.Getenv("D2_TARGET_DB_HOST")
-    port := os.Getenv("D2_TARGET_DB_PORT")
-    dbname := os.Getenv("D2_TARGET_DB_NAME")
-    
-    dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, host, port, dbname)
+	user := os.Getenv("D2_TARGET_DB_USER")
+	password := os.Getenv("D2_TARGET_DB_PASSWORD")
+	host := os.Getenv("D2_TARGET_DB_HOST")
+	port := os.Getenv("D2_TARGET_DB_PORT")
+	dbname := os.Getenv("D2_TARGET_DB_NAME")
 
-    db, err := sql.Open("mysql", dataSourceName)
-    if err != nil {
-		fmt.Println("Error using dsn:", dataSourceName)
-        return nil, err
-    }
-	
-    err = db.Ping()
-    if err != nil {
-		fmt.Println("Error using dsn:", dataSourceName)
-        return nil, err
-    }
+	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, host, port, dbname)
 
-    return db, nil
+	db, err := sql.Open("mysql", dataSourceName)
+	if err != nil {
+		fmt.Println("Error using dsn:", dataSourceName)
+		return nil, err
+	}
+
+	err = db.Ping()
+	if err != nil {
+		fmt.Println("Error using dsn:", dataSourceName)
+		return nil, err
+	}
+
+	return db, nil
 }
 
 func information_schema_from(_db *sql.DB) *sql.Rows {
@@ -97,4 +97,3 @@ func structured_schema_from(_rows *sql.Rows) Schema {
 
 	return schema
 }
-

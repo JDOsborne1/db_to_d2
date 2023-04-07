@@ -30,33 +30,30 @@ func schema_to_d2(schema Schema, _minimalist bool) string {
 func table_to_d2(_table Table, _minimalist bool) string {
 	var builder strings.Builder
 
+	builder.WriteString(fmt.Sprintf("%s: {\n  shape: sql_table\n", _table.Name))
 
-			builder.WriteString(fmt.Sprintf("%s: {\n  shape: sql_table\n", _table.Name))
-
-		for _, column := range _table.Columns {
-			if column.Key == "" && _minimalist {
-				continue
-			}
-
-			builder.WriteString(fmt.Sprintf("  %s: %s", column.Name, column.Type))
-
-			if column.Key == "PRI" {
-				builder.WriteString(" {constraint: primary_key}")
-			} else if column.Key == "MUL" {
-				builder.WriteString(" {constraint: foreign_key}")
-				} else if column.Key == "UNK" {
-				builder.WriteString(" {constraint: unique}")
-
-			} else if column.Key == "VIRTUAL" {
-				builder.WriteString(" {constraint: foreign_key}")
-			}
-
-
-			builder.WriteString("\n")
+	for _, column := range _table.Columns {
+		if column.Key == "" && _minimalist {
+			continue
 		}
 
-		builder.WriteString("}\n\n")
+		builder.WriteString(fmt.Sprintf("  %s: %s", column.Name, column.Type))
 
+		if column.Key == "PRI" {
+			builder.WriteString(" {constraint: primary_key}")
+		} else if column.Key == "MUL" {
+			builder.WriteString(" {constraint: foreign_key}")
+		} else if column.Key == "UNK" {
+			builder.WriteString(" {constraint: unique}")
 
-		return builder.String()
+		} else if column.Key == "VIRTUAL" {
+			builder.WriteString(" {constraint: foreign_key}")
+		}
+
+		builder.WriteString("\n")
+	}
+
+	builder.WriteString("}\n\n")
+
+	return builder.String()
 }
