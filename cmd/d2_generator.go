@@ -18,16 +18,11 @@ func schema_to_d2(schema Schema, _minimalist bool, _group TableGroup) string {
 		}
 	}
 
+	// Write ungrouped table definitions
 	for _, table := range schema.Tables {
 		if !table_group_check[table.Name] {
-			groupings[""] = append(groupings[""], table)
+			builder.WriteString(table_to_d2(table, _minimalist))
 		}
-	}
-
-
-	// Write ungrouped table definitions
-	for _, table := range groupings[""] {
-		builder.WriteString(table_to_d2(table, _minimalist))
 	}
 
 	builder.WriteString(_group.Name  + ": { \n")
