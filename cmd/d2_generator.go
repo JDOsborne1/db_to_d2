@@ -8,8 +8,6 @@ import (
 func schema_to_d2(schema Schema, _minimalist bool, _group TableGroup) string {
 	var builder strings.Builder
 	groupings := make(map[string][]Table)
-	groupings[""] = []Table{}
-	groupings[_group.Name] = []Table{}
 	// Extracting table groups 
 	for _, table := range schema.Tables {
 		in_set := in_set(table.Name, _group.Tables)
