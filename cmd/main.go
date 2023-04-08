@@ -44,9 +44,11 @@ func in_set(_element string, _set []string) bool {
 	return false
 }
 
-func wrap_name_in_group(_table_name string, _grouping TableGroup) string {
-	if in_set(_table_name, _grouping.Tables) {
-		return _grouping.Name + "." + _table_name
+func wrap_name_in_group(_table_name string, _grouping []TableGroup) string {
+	for _, group := range _grouping {
+		if in_set(_table_name, group.Tables) {
+			return group.Name + "." + _table_name
+		}
 	}
 	return _table_name
 }
@@ -76,14 +78,14 @@ func main() {
 		Tables: []string{"comments", "posts"},
 	}
 
-	// table_group2 := TableGroup{
-	// 	Name: "pii",
-	// 	Tables: []string{"users"},
-	// }
+	table_group2 := TableGroup{
+		Name: "pii",
+		Tables: []string{"users"},
+	}
 
 	
 	augmented_schema := augment_schema(schema, links)
-	d2 := schema_to_d2(augmented_schema, false, table_group1)
+	d2 := schema_to_d2(augmented_schema, false, []TableGroup{table_group1, table_group2})
 
 	fmt.Println(d2)
 }
