@@ -77,11 +77,13 @@ func main() {
 	table_group1 := TableGroup{
 		Tag:    "ugc",
 		Tables: []string{"comments", "posts"},
+		Name:   "User Generated Content",
 	}
 
 	table_group2 := TableGroup{
 		Tag:    "pii",
 		Tables: []string{"users"},
+		Name:   "Personally Identifiable Information",
 	}
 
 	augmented_schema := augment_schema(schema, links)

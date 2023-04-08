@@ -39,6 +39,13 @@ func schema_to_d2(schema Schema, _minimalist bool, _groups []TableGroup) string 
 
 	}
 
+	// Write labels for groups
+	for _, group := range _groups {
+		if group.Name != "" {
+			builder.WriteString(group.Tag + " : " + "\"" + group.Name + "\"" + "\n")
+		}
+	}
+
 	// Write foreign key relationships
 	for _, table := range schema.Tables {
 		for _, column := range table.Columns {
