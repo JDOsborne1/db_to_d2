@@ -35,6 +35,19 @@ type TableGroup struct {
 	Tables []string
 }
 
+func wrap_name_in_group(_table_name string, _grouping TableGroup) string {
+	in_set := false
+	for _, table_name := range _grouping.Tables {
+		if _table_name == table_name {
+			in_set = true
+		}
+	}
+	if in_set {
+		return _grouping.Name + "." + _table_name
+	}
+	return _table_name
+}
+
 func main() {
 	// Connect to the MySQL database
 	db, err := connect_to_db()
@@ -56,12 +69,12 @@ func main() {
 	})
 
 	table_group := TableGroup{
-		Name: "User Generated Content",
+		Name: "ugc",
 		Tables: []string{"comments", "posts"},
 	}
 
 	augmented_schema := augment_schema(schema, links)
-	d2 := schema_to_d2(augmented_schema, true, table_group)
+	d2 := schema_to_d2(augmented_schema, false, table_group)
 
 	fmt.Println(d2)
 }

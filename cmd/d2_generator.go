@@ -9,7 +9,7 @@ func schema_to_d2(schema Schema, _minimalist bool, _group TableGroup) string {
 	var builder strings.Builder
 
 	ungrouped_tables := []Table{}
-
+	grouped_tables := []Table{}
 	// Extracting table groups 
 	for _, table := range schema.Tables {
 		in_set := false
@@ -22,19 +22,31 @@ func schema_to_d2(schema Schema, _minimalist bool, _group TableGroup) string {
 			ungrouped_tables = append(ungrouped_tables, table)
 		}
 		if in_set {
-			fmt.Println("que?")
+			grouped_tables = append(grouped_tables, table)
 		}
 	}
+
+
 	// Write table definitions
-	for _, table := range schema.Tables {
+	for _, table := range ungrouped_tables {
 		builder.WriteString(table_to_d2(table, _minimalist))
 	}
+
+	builder.WriteString(_group.Name  + ": { \n")
+
+	// Write table definitions
+	for _, table := range grouped_tables {
+		builder.WriteString(table_to_d2(table, _minimalist))
+	}
+
+	builder.WriteString("}\n")
+
 
 	// Write foreign key relationships
 	for _, table := range schema.Tables {
 		for _, column := range table.Columns {
 			if column.Reference != nil {
-				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s", table.Name, column.Name, column.Reference.Table, column.Reference.Column))
+				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s", wrap_name_in_group(table.Name, _group), column.Name, wrap_name_in_group(column.Reference.Table, _group), column.Reference.Column))
 				builder.WriteString("{target-arrowhead: {shape: cf-many}}")
 				builder.WriteString("\n\n")
 			}
