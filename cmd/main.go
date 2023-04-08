@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 )
 
@@ -31,35 +30,28 @@ type Schema struct {
 	Indexes []string
 }
 
-type VirtualLink struct {
-	source_table string
-	source_column string
-	referenced_table string
-	referenced_column string
+type TableGroup struct {
+	Tag    string
+	Name   string
+	Tables []string
 }
 
-func augment_schema_with_virtual(_input Schema, _links VirtualLink) Schema {
-	new_tables := []Table{}
-	for _, table := range _input.Tables {
-		if table.Name == _links.source_table {
-			new_columns := []Column{}
-			for _, column := range table.Columns {
-				if column.Name == _links.source_column {
-					column.Reference = &Reference{
-						Table: _links.referenced_table,
-						Column: _links.referenced_column,
-					}
-					column.Key = "VIRTUAL"
-				}
-				new_columns = append(new_columns, column)
-			}
-			table.Columns = new_columns
-
+func in_set(_element string, _set []string) bool {
+	for _, element := range _set {
+		if _element == element {
+			return true
 		}
-		new_tables = append(new_tables, table)
 	}
-	_input.Tables = new_tables
-	return _input
+	return false
+}
+
+func wrap_name_in_group(_table_name string, _grouping []TableGroup) string {
+	for _, group := range _grouping {
+		if in_set(_table_name, group.Tables) {
+			return group.Tag + "." + _table_name
+		}
+	}
+	return _table_name
 }
 
 func main() {
@@ -74,15 +66,28 @@ func main() {
 
 	schema := structured_schema_from(db_schema)
 
-	augmented_schema := augment_schema_with_virtual(schema, VirtualLink{
-		source_table: "comments",
-		source_column: "content",
-		referenced_table: "posts",
+	var links []VirtualLink
+	links = append(links, VirtualLink{
+		source_table:      "comments",
+		source_column:     "content",
+		referenced_table:  "posts",
 		referenced_column: "content",
 	})
-	_, _ = json.MarshalIndent(augmented_schema, "", "  ")
-	// fmt.Println(string(val))
-	d2 := schema_to_d2(augmented_schema, false)
+
+	table_group1 := TableGroup{
+		Tag:    "ugc",
+		Tables: []string{"comments", "posts"},
+		Name:   "User Generated Content",
+	}
+
+	table_group2 := TableGroup{
+		Tag:    "pii",
+		Tables: []string{"users"},
+		Name:   "Personally Identifiable Information",
+	}
+
+	augmented_schema := augment_schema(schema, links)
+	d2 := schema_to_d2(augmented_schema, false, []TableGroup{table_group1, table_group2})
 
 	fmt.Println(d2)
 }

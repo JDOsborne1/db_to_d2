@@ -5,19 +5,52 @@ import (
 	"strings"
 )
 
-func schema_to_d2(schema Schema, _minimalist bool) string {
+func schema_to_d2(schema Schema, _minimalist bool, _groups []TableGroup) string {
 	var builder strings.Builder
-
-	// Write table definitions
+	groupings := make(map[string][]Table)
+	table_group_check := make(map[string]bool)
+	// Extracting table groups
 	for _, table := range schema.Tables {
-		builder.WriteString(table_to_d2(table, _minimalist))
+		for _, group := range _groups {
+			in_set := in_set(table.Name, group.Tables)
+			if in_set {
+				groupings[group.Tag] = append(groupings[group.Tag], table)
+				table_group_check[table.Name] = true
+			}
+		}
+	}
+
+	// Write ungrouped table definitions
+	for _, table := range schema.Tables {
+		if !table_group_check[table.Name] {
+			builder.WriteString(table_to_d2(table, _minimalist))
+		}
+	}
+
+	// Write grouped table definitions
+	for group, tables := range groupings {
+
+		builder.WriteString(group + ": { \n")
+
+		for _, table := range tables {
+			builder.WriteString(table_to_d2(table, _minimalist))
+		}
+		builder.WriteString("}\n")
+
+	}
+
+	// Write labels for groups
+	for _, group := range _groups {
+		if group.Name != "" {
+			builder.WriteString(group.Tag + " : " + "\"" + group.Name + "\"" + "\n")
+		}
 	}
 
 	// Write foreign key relationships
 	for _, table := range schema.Tables {
 		for _, column := range table.Columns {
 			if column.Reference != nil {
-				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s", table.Name, column.Name, column.Reference.Table, column.Reference.Column))
+				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s", wrap_name_in_group(table.Name, _groups), column.Name, wrap_name_in_group(column.Reference.Table, _groups), column.Reference.Column))
 				builder.WriteString("{target-arrowhead: {shape: cf-many}}")
 				builder.WriteString("\n\n")
 			}
@@ -30,33 +63,30 @@ func schema_to_d2(schema Schema, _minimalist bool) string {
 func table_to_d2(_table Table, _minimalist bool) string {
 	var builder strings.Builder
 
+	builder.WriteString(fmt.Sprintf("%s: {\n  shape: sql_table\n", _table.Name))
 
-			builder.WriteString(fmt.Sprintf("%s: {\n  shape: sql_table\n", _table.Name))
-
-		for _, column := range _table.Columns {
-			if column.Key == "" && _minimalist {
-				continue
-			}
-
-			builder.WriteString(fmt.Sprintf("  %s: %s", column.Name, column.Type))
-
-			if column.Key == "PRI" {
-				builder.WriteString(" {constraint: primary_key}")
-			} else if column.Key == "MUL" {
-				builder.WriteString(" {constraint: foreign_key}")
-				} else if column.Key == "UNK" {
-				builder.WriteString(" {constraint: unique}")
-
-			} else if column.Key == "VIRTUAL" {
-				builder.WriteString(" {constraint: foreign_key}")
-			}
-
-
-			builder.WriteString("\n")
+	for _, column := range _table.Columns {
+		if column.Key == "" && _minimalist {
+			continue
 		}
 
-		builder.WriteString("}\n\n")
+		builder.WriteString(fmt.Sprintf("  %s: %s", column.Name, column.Type))
 
+		if column.Key == "PRI" {
+			builder.WriteString(" {constraint: primary_key}")
+		} else if column.Key == "MUL" {
+			builder.WriteString(" {constraint: foreign_key}")
+		} else if column.Key == "UNK" {
+			builder.WriteString(" {constraint: unique}")
 
-		return builder.String()
+		} else if column.Key == "VIRTUAL" {
+			builder.WriteString(" {constraint: foreign_key}")
+		}
+
+		builder.WriteString("\n")
+	}
+
+	builder.WriteString("}\n\n")
+
+	return builder.String()
 }

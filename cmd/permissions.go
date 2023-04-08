@@ -2,7 +2,6 @@ package main
 
 import "database/sql"
 
-
 type UserPermission struct {
 	User   string
 	Table  string
