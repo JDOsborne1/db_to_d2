@@ -103,7 +103,7 @@ func main() {
 	}
 
 	augmented_schema := augment_schema(schema, links)
-	d2 := schema_to_d2(augmented_schema, false, []TableGroup{table_group1, table_group2})
+	d2 := schema_to_d2(augmented_schema, nil, []TableGroup{table_group1, table_group2})
 
 	fmt.Println(d2)
 }

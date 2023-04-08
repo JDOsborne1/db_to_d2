@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func schema_to_d2(schema Schema, _minimalist bool, _groups []TableGroup) string {
+func schema_to_d2(schema Schema, _restrictor func(Table, Column) bool, _groups []TableGroup) string {
 	var builder strings.Builder
 	groupings := make(map[string][]Table)
 	table_group_check := make(map[string]bool)
@@ -23,7 +23,7 @@ func schema_to_d2(schema Schema, _minimalist bool, _groups []TableGroup) string 
 	// Write ungrouped table definitions
 	for _, table := range schema.Tables {
 		if !table_group_check[table.Name] {
-			builder.WriteString(table_to_d2(table, _minimalist))
+			builder.WriteString(table_to_d2(table, _restrictor))
 		}
 	}
 
@@ -33,7 +33,7 @@ func schema_to_d2(schema Schema, _minimalist bool, _groups []TableGroup) string 
 		builder.WriteString(group + ": { \n")
 
 		for _, table := range tables {
-			builder.WriteString(table_to_d2(table, _minimalist))
+			builder.WriteString(table_to_d2(table, _restrictor))
 		}
 		builder.WriteString("}\n")
 
@@ -60,13 +60,13 @@ func schema_to_d2(schema Schema, _minimalist bool, _groups []TableGroup) string 
 	return builder.String()
 }
 
-func table_to_d2(_table Table, _minimalist bool) string {
+func table_to_d2(_table Table, _restrictor func(Table, Column) bool) string {
 	var builder strings.Builder
 
 	builder.WriteString(fmt.Sprintf("%s: {\n  shape: sql_table\n", _table.Name))
 
 	for _, column := range _table.Columns {
-		if column.Key == "" && _minimalist {
+		if _restrictor != nil && _restrictor(_table, column) {
 			continue
 		}
 
