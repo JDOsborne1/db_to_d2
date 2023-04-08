@@ -7,30 +7,30 @@ import (
 
 func schema_to_d2(schema Schema, _minimalist bool, _group TableGroup) string {
 	var builder strings.Builder
-
-	ungrouped_tables := []Table{}
-	grouped_tables := []Table{}
+	groupings := make(map[string][]Table)
+	groupings[""] = []Table{}
+	groupings[_group.Name] = []Table{}
 	// Extracting table groups 
 	for _, table := range schema.Tables {
 		in_set := in_set(table.Name, _group.Tables)
 		if !in_set {
-			ungrouped_tables = append(ungrouped_tables, table)
+			groupings[""] = append(groupings[""], table)
 		}
 		if in_set {
-			grouped_tables = append(grouped_tables, table)
+			groupings[_group.Name] = append(groupings[_group.Name], table)
 		}
 	}
 
 
 	// Write table definitions
-	for _, table := range ungrouped_tables {
+	for _, table := range groupings[""] {
 		builder.WriteString(table_to_d2(table, _minimalist))
 	}
 
 	builder.WriteString(_group.Name  + ": { \n")
 
 	// Write table definitions
-	for _, table := range grouped_tables {
+	for _, table := range groupings[_group.Name] {
 		builder.WriteString(table_to_d2(table, _minimalist))
 	}
 
