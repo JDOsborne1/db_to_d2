@@ -9,7 +9,7 @@ func schema_to_d2(schema Schema, _minimalist bool, _groups []TableGroup) string 
 	var builder strings.Builder
 	groupings := make(map[string][]Table)
 	table_group_check := make(map[string]bool)
-	// Extracting table groups 
+	// Extracting table groups
 	for _, table := range schema.Tables {
 		for _, group := range _groups {
 			in_set := in_set(table.Name, group.Tables)
@@ -27,19 +27,17 @@ func schema_to_d2(schema Schema, _minimalist bool, _groups []TableGroup) string 
 		}
 	}
 
-
 	// Write grouped table definitions
 	for group, tables := range groupings {
 
-		builder.WriteString(group  + ": { \n")
-		
-		for _, table := range tables {
-		builder.WriteString(table_to_d2(table, _minimalist))
-	}
-	builder.WriteString("}\n")
-	
-}
+		builder.WriteString(group + ": { \n")
 
+		for _, table := range tables {
+			builder.WriteString(table_to_d2(table, _minimalist))
+		}
+		builder.WriteString("}\n")
+
+	}
 
 	// Write foreign key relationships
 	for _, table := range schema.Tables {

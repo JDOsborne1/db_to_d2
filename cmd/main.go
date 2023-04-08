@@ -31,7 +31,7 @@ type Schema struct {
 }
 
 type TableGroup struct {
-	Name string
+	Name   string
 	Tables []string
 }
 
@@ -40,7 +40,7 @@ func in_set(_element string, _set []string) bool {
 		if _element == element {
 			return true
 		}
-	}	
+	}
 	return false
 }
 
@@ -74,16 +74,15 @@ func main() {
 	})
 
 	table_group1 := TableGroup{
-		Name: "ugc",
+		Name:   "ugc",
 		Tables: []string{"comments", "posts"},
 	}
 
 	table_group2 := TableGroup{
-		Name: "pii",
+		Name:   "pii",
 		Tables: []string{"users"},
 	}
 
-	
 	augmented_schema := augment_schema(schema, links)
 	d2 := schema_to_d2(augmented_schema, false, []TableGroup{table_group1, table_group2})
 
