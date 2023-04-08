@@ -65,3 +65,60 @@ func get_column_level_permissions(db *sql.DB) ([]UserColumnPermission, error) {
 
 	return permissions, nil
 }
+
+type UserTablePermission struct {
+	User   string
+	Table  string
+	Select bool
+}
+
+// The `get_table_level_permissions` function applies only at the column permission level.
+// It does not apply at the table level, and it does not apply at the database level.
+// A different function will be needed to apply at those levels.
+func get_table_level_permissions(db *sql.DB) ([]UserTablePermission, error) {
+	var permissions []UserTablePermission
+
+	rows, err := db.Query(`
+	SELECT Grantee,
+		T.Table_Name,
+		COUNT(*) AS Has_Select_Permission
+	FROM INFORMATION_SCHEMA.TABLES T
+		LEFT JOIN INFORMATION_SCHEMA.TABLE_PRIVILEGES TP ON T.Table_Name = TP.Table_Name
+	WHERE T.TABLE_TYPE = 'BASE TABLE'
+		AND TP.PRIVILEGE_TYPE = 'SELECT'
+		AND Grantee IS NOT NULL
+	GROUP BY Grantee,
+		Table_Name
+	ORDER BY Grantee,
+		Table_Name;
+	`)
+
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		var user string
+		var table string
+		var hasSelectPermission sql.NullInt64
+
+		err = rows.Scan(&user, &table, &hasSelectPermission)
+		if err != nil {
+			return nil, err
+		}
+
+		permissions = append(permissions, UserTablePermission{
+			User:   user,
+			Table:  table,
+			Select: hasSelectPermission.Valid && hasSelectPermission.Int64 > 0,
+		})
+	}
+
+	err = rows.Err()
+	if err != nil {
+		return nil, err
+	}
+
+	return permissions, nil
+}
