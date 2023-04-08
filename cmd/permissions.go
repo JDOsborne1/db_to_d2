@@ -9,14 +9,17 @@ type UserPermission struct {
 	Select bool
 }
 
-func GetUserPermissions(db *sql.DB) ([]UserPermission, error) {
+// The `get_user_permissions` function applies only at the column permission level.
+// It does not apply at the table level, and it does not apply at the database level.
+// A different function will be needed to apply at those levels.
+func get_user_permissions(db *sql.DB) ([]UserPermission, error) {
 	var permissions []UserPermission
 
 	rows, err := db.Query(`
 		SELECT
 			Grantee,
-			Table_Name,
-			Column_Name,
+			C.Table_Name,
+			C.Column_Name,
 			(SELECT COUNT(*) FROM INFORMATION_SCHEMA.COLUMN_PRIVILEGES
 				WHERE TABLE_NAME = C.Table_Name AND COLUMN_NAME = C.Column_Name AND PRIVILEGE_TYPE = 'SELECT'
 				AND GRANTEE = CP.GRANTEE) AS Has_Select_Permission
@@ -26,6 +29,7 @@ func GetUserPermissions(db *sql.DB) ([]UserPermission, error) {
 			LEFT JOIN INFORMATION_SCHEMA.COLUMN_PRIVILEGES CP ON C.Table_Name = CP.Table_Name AND C.Column_Name = CP.Column_Name
 		WHERE
 			T.TABLE_TYPE = 'BASE TABLE'
+		AND Grantee IS NOT NULL
 		ORDER BY
 			Grantee, Table_Name, Column_Name;
 	`)
