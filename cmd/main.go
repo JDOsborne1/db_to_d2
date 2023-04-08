@@ -102,8 +102,23 @@ func main() {
 		Name:   "Personally Identifiable Information",
 	}
 
+	designated_user := "'testuser'@'%'"
+
+	table_level_permissions, err := get_table_level_permissions(db)
+	if err != nil {
+		panic(err)
+	}
+
+	column_level_permissions, err := get_column_level_permissions(db)
+	if err != nil {
+		panic(err)
+	}
+
+	permission_restrictor := permission_driven_restrictor(table_level_permissions, column_level_permissions, designated_user)
+
 	augmented_schema := augment_schema(schema, links)
-	d2 := schema_to_d2(augmented_schema, nil, []TableGroup{table_group1, table_group2})
+	d2 := schema_to_d2(augmented_schema, permission_restrictor, []TableGroup{table_group1, table_group2})
 
 	fmt.Println(d2)
+
 }

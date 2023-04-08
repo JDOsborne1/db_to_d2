@@ -1,6 +1,8 @@
 package main
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 type UserColumnPermission struct {
 	User   string
@@ -121,4 +123,28 @@ func get_table_level_permissions(db *sql.DB) ([]UserTablePermission, error) {
 	}
 
 	return permissions, nil
+}
+
+func permission_driven_restrictor(_table_permissions []UserTablePermission, _column_permissions []UserColumnPermission, _for_user string) func(Table, Column) bool {
+	table_permission_map := make(map[string]bool)
+	for _, permission := range _table_permissions {
+		if permission.User == _for_user {
+			table_permission_map[permission.Table] = permission.Select
+		}
+	}
+
+	column_permission_map := make(map[string]map[string]bool)
+	for _, permission := range _column_permissions {
+		if permission.User == _for_user {
+			if _, ok := column_permission_map[permission.Table]; !ok {
+				column_permission_map[permission.Table] = make(map[string]bool)
+			}
+			column_permission_map[permission.Table][permission.Column] = permission.Select
+		}
+	}
+
+	return func(_table Table, _column Column) bool {
+		allowed := table_permission_map[_table.Name] || column_permission_map[_table.Name][_column.Name]
+		return !allowed
+	}
 }
