@@ -8,19 +8,24 @@ import (
 func schema_to_d2(schema Schema, _minimalist bool, _group TableGroup) string {
 	var builder strings.Builder
 	groupings := make(map[string][]Table)
+	table_group_check := make(map[string]bool)
 	// Extracting table groups 
 	for _, table := range schema.Tables {
 		in_set := in_set(table.Name, _group.Tables)
-		if !in_set {
-			groupings[""] = append(groupings[""], table)
-		}
 		if in_set {
 			groupings[_group.Name] = append(groupings[_group.Name], table)
+			table_group_check[table.Name] = true
+		}
+	}
+
+	for _, table := range schema.Tables {
+		if !table_group_check[table.Name] {
+			groupings[""] = append(groupings[""], table)
 		}
 	}
 
 
-	// Write table definitions
+	// Write ungrouped table definitions
 	for _, table := range groupings[""] {
 		builder.WriteString(table_to_d2(table, _minimalist))
 	}
