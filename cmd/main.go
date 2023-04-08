@@ -71,13 +71,19 @@ func main() {
 		referenced_column: "content",
 	})
 
-	table_group := TableGroup{
+	table_group1 := TableGroup{
 		Name: "ugc",
 		Tables: []string{"comments", "posts"},
 	}
 
+	// table_group2 := TableGroup{
+	// 	Name: "pii",
+	// 	Tables: []string{"users"},
+	// }
+
+	
 	augmented_schema := augment_schema(schema, links)
-	d2 := schema_to_d2(augmented_schema, false, table_group)
+	d2 := schema_to_d2(augmented_schema, false, table_group1)
 
 	fmt.Println(d2)
 }
