@@ -12,12 +12,7 @@ func schema_to_d2(schema Schema, _minimalist bool, _group TableGroup) string {
 	grouped_tables := []Table{}
 	// Extracting table groups 
 	for _, table := range schema.Tables {
-		in_set := false
-		for _, group_table := range _group.Tables {
-			if table.Name == group_table {
-				in_set = true
-			}
-		}
+		in_set := in_set(table.Name, _group.Tables)
 		if !in_set {
 			ungrouped_tables = append(ungrouped_tables, table)
 		}

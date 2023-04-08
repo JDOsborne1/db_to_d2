@@ -35,14 +35,17 @@ type TableGroup struct {
 	Tables []string
 }
 
-func wrap_name_in_group(_table_name string, _grouping TableGroup) string {
-	in_set := false
-	for _, table_name := range _grouping.Tables {
-		if _table_name == table_name {
-			in_set = true
+func in_set(_element string, _set []string) bool {
+	for _, element := range _set {
+		if _element == element {
+			return true
 		}
-	}
-	if in_set {
+	}	
+	return false
+}
+
+func wrap_name_in_group(_table_name string, _grouping TableGroup) string {
+	if in_set(_table_name, _grouping.Tables) {
 		return _grouping.Name + "." + _table_name
 	}
 	return _table_name
