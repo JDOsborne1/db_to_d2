@@ -30,6 +30,11 @@ type Schema struct {
 	Indexes []string
 }
 
+type TableGroup struct {
+	Name string
+	Tables []string
+}
+
 func main() {
 	// Connect to the MySQL database
 	db, err := connect_to_db()
@@ -50,8 +55,13 @@ func main() {
 		referenced_column: "content",
 	})
 
+	table_group := TableGroup{
+		Name: "User Generated Content",
+		Tables: []string{"comments", "posts"},
+	}
+
 	augmented_schema := augment_schema(schema, links)
-	d2 := schema_to_d2(augmented_schema, true)
+	d2 := schema_to_d2(augmented_schema, true, table_group)
 
 	fmt.Println(d2)
 }

@@ -5,9 +5,26 @@ import (
 	"strings"
 )
 
-func schema_to_d2(schema Schema, _minimalist bool) string {
+func schema_to_d2(schema Schema, _minimalist bool, _group TableGroup) string {
 	var builder strings.Builder
 
+	ungrouped_tables := []Table{}
+
+	// Extracting table groups 
+	for _, table := range schema.Tables {
+		in_set := false
+		for _, group_table := range _group.Tables {
+			if table.Name == group_table {
+				in_set = true
+			}
+		}
+		if !in_set {
+			ungrouped_tables = append(ungrouped_tables, table)
+		}
+		if in_set {
+			fmt.Println("que?")
+		}
+	}
 	// Write table definitions
 	for _, table := range schema.Tables {
 		builder.WriteString(table_to_d2(table, _minimalist))
