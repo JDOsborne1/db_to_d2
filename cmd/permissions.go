@@ -2,18 +2,18 @@ package main
 
 import "database/sql"
 
-type UserPermission struct {
+type UserColumnPermission struct {
 	User   string
 	Table  string
 	Column string
 	Select bool
 }
 
-// The `get_user_permissions` function applies only at the column permission level.
+// The `get_column_level_permissions` function applies only at the column permission level.
 // It does not apply at the table level, and it does not apply at the database level.
 // A different function will be needed to apply at those levels.
-func get_user_permissions(db *sql.DB) ([]UserPermission, error) {
-	var permissions []UserPermission
+func get_column_level_permissions(db *sql.DB) ([]UserColumnPermission, error) {
+	var permissions []UserColumnPermission
 
 	rows, err := db.Query(`
 		SELECT
@@ -50,7 +50,7 @@ func get_user_permissions(db *sql.DB) ([]UserPermission, error) {
 			return nil, err
 		}
 
-		permissions = append(permissions, UserPermission{
+		permissions = append(permissions, UserColumnPermission{
 			User:   user,
 			Table:  table,
 			Column: column,
