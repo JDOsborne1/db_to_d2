@@ -14,7 +14,7 @@ func schema_to_d2(schema Schema, _minimalist bool, _groups []TableGroup) string 
 		for _, group := range _groups {
 			in_set := in_set(table.Name, group.Tables)
 			if in_set {
-				groupings[group.Name] = append(groupings[group.Name], table)
+				groupings[group.Tag] = append(groupings[group.Tag], table)
 				table_group_check[table.Name] = true
 			}
 		}

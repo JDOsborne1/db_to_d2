@@ -31,6 +31,7 @@ type Schema struct {
 }
 
 type TableGroup struct {
+	Tag    string
 	Name   string
 	Tables []string
 }
@@ -47,7 +48,7 @@ func in_set(_element string, _set []string) bool {
 func wrap_name_in_group(_table_name string, _grouping []TableGroup) string {
 	for _, group := range _grouping {
 		if in_set(_table_name, group.Tables) {
-			return group.Name + "." + _table_name
+			return group.Tag + "." + _table_name
 		}
 	}
 	return _table_name
@@ -74,12 +75,12 @@ func main() {
 	})
 
 	table_group1 := TableGroup{
-		Name:   "ugc",
+		Tag:    "ugc",
 		Tables: []string{"comments", "posts"},
 	}
 
 	table_group2 := TableGroup{
-		Name:   "pii",
+		Tag:    "pii",
 		Tables: []string{"users"},
 	}
 
