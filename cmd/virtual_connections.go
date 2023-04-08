@@ -39,5 +39,6 @@ func augment_columns(_table Table, _links VirtualLink) Table {
 		}
 		new_columns = append(new_columns, column)
 	}
+	_table.Columns = new_columns
 	return _table
 }
