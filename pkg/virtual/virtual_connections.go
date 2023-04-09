@@ -1,6 +1,8 @@
 package virtual
 
-import ( "core" )
+import (
+	"core"
+)
 
 type VirtualLink struct {
 	SourceTable      string `json:"source_table,omitempty"`

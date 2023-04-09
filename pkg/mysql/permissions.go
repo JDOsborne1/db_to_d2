@@ -1,8 +1,8 @@
 package mysql
 
 import (
-	"database/sql"
 	"core"
+	"database/sql"
 )
 
 type UserColumnPermission struct {

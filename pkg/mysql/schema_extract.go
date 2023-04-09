@@ -1,11 +1,11 @@
 package mysql
 
 import (
-	"fmt"
-	"os"
-"core"
+	"core"
 	"database/sql"
+	"fmt"
 	_ "github.com/go-sql-driver/mysql"
+	"os"
 )
 
 func Connect_to_db() (*sql.DB, error) {
