@@ -149,7 +149,6 @@ func permission_driven_restrictor(_table_permissions []UserTablePermission, _col
 	}
 }
 
-
 func restrict_to_table_for_user(_db *sql.DB, _username string) Restrictor {
 	table_permissions, err := get_table_level_permissions(_db)
 	if err != nil {

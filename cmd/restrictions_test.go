@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-//TestRestrictionsIdentity is a basic test that checks that the identity function returns the same value as the input.
+// TestRestrictionsIdentity is a basic test that checks that the identity function returns the same value as the input.
 func TestRestrictionsIdentity(t *testing.T) {
 	//Test data
 	input := Schema{
