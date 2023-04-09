@@ -1,0 +1,8 @@
+[
+    {
+      "source_table": "comments",
+      "source_column": "content",
+      "referenced_table": "posts",
+      "referenced_column": "content"
+    }
+  ]

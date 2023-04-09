@@ -85,12 +85,8 @@ func main() {
 	schema := structured_schema_from(db_schema)
 
 	links := []VirtualLink{}
-	links = append(links, VirtualLink{
-		SourceTable:      "comments",
-		SourceColumn:     "content",
-		ReferencedTable:  "posts",
-		ReferencedColumn: "content",
-	})
+	links_json, _ := ioutil.ReadFile("virtual_links.json")
+	json.Unmarshal(links_json, &links)
 
 	table_groups := []TableGroup{}
 
