@@ -85,12 +85,12 @@ func main() {
 	schema := structured_schema_from(db_schema)
 
 	links := []VirtualLink{}
-	links_json, _ := os.ReadFile("virtual_links.json")
+	links_json, _ := os.ReadFile("example_virtual_links.json")
 	json.Unmarshal(links_json, &links)
 
 	table_groups := []TableGroup{}
 
-	table_groups_json, _ := os.ReadFile("table_groups.json")
+	table_groups_json, _ := os.ReadFile("example_table_groups.json")
 	json.Unmarshal(table_groups_json, &table_groups)
 
 	designated_user := "'testuser'@'%'"
