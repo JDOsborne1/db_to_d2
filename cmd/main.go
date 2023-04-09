@@ -1,7 +1,9 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 )
 
 // Column represents a single column in a database table.
@@ -82,7 +84,7 @@ func main() {
 
 	schema := structured_schema_from(db_schema)
 
-	var links []VirtualLink
+	links := []VirtualLink{}
 	links = append(links, VirtualLink{
 		source_table:      "comments",
 		source_column:     "content",
@@ -90,17 +92,10 @@ func main() {
 		referenced_column: "content",
 	})
 
-	table_group1 := TableGroup{
-		Tag:    "ugc",
-		Tables: []string{"comments", "posts"},
-		Name:   "User Generated Content",
-	}
+	table_groups := []TableGroup{}
 
-	table_group2 := TableGroup{
-		Tag:    "pii",
-		Tables: []string{"users"},
-		Name:   "Personally Identifiable Information",
-	}
+	table_groups_json, _ := ioutil.ReadFile("table_groups.json")
+	json.Unmarshal(table_groups_json, &table_groups)
 
 	designated_user := "'testuser'@'%'"
 
@@ -117,7 +112,7 @@ func main() {
 	permission_restrictor := permission_driven_restrictor(table_level_permissions, column_level_permissions, designated_user)
 
 	augmented_schema := augment_schema(schema, links)
-	d2 := schema_to_d2(augmented_schema, permission_restrictor, []TableGroup{table_group1, table_group2})
+	d2 := schema_to_d2(augmented_schema, permission_restrictor, table_groups)
 
 	fmt.Println(d2)
 

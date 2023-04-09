@@ -1,0 +1,17 @@
+[
+  {
+    "Tag": "ugc",
+    "Name": "User Generated Content",
+    "Tables": [
+      "comments",
+      "posts"
+    ]
+  },
+  {
+    "Tag": "pii",
+    "Name": "Personally Identifiable Information",
+    "Tables": [
+      "users"
+    ]
+  }
+]
