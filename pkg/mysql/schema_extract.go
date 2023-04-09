@@ -26,7 +26,7 @@ func connect_to_db() (*sql.DB, error) {
 	essential_vars := []string{user, password, host, port, dbname}
 	for _, v := range essential_vars {
 		if v == "" {
-			return nil, fmt.Errorf("missing environment variable")
+			return nil, fmt.Errorf("missing environment variable:" + v)
 		}
 	}
 
