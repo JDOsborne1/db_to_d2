@@ -9,6 +9,14 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// connect_to_db connects to the database specified by the environment variables
+// - D2_TARGET_DB_USER,
+// - D2_TARGET_DB_PASSWORD,
+// - D2_TARGET_DB_HOST,
+// - D2_TARGET_DB_PORT,
+// - D2_TARGET_DB_NAME
+// The database must be a MySQL database.
+// Returns a pointer to the database and an error if the connection failed.
 func connect_to_db() (*sql.DB, error) {
 	user := os.Getenv("D2_TARGET_DB_USER")
 	password := os.Getenv("D2_TARGET_DB_PASSWORD")
@@ -39,6 +47,10 @@ func connect_to_db() (*sql.DB, error) {
 	return db, nil
 }
 
+// This function is used to extract the schema from the database.
+// it uses the information_schema to get the table and column information.
+// Currently it only supports the schema 'testdb'. This will be changed in the future.
+// TODO: Make this function more generic
 func information_schema_from(_db *sql.DB) *sql.Rows {
 
 	// Retrieve the table and column information from the information schema
@@ -57,6 +69,8 @@ func information_schema_from(_db *sql.DB) *sql.Rows {
 	return rows
 }
 
+// This function is used to extract the schema from the database.
+// Once connected to the information schema of the database, it loops through each row and builds the data structure.
 func structured_schema_from(_rows *sql.Rows) core.Schema {
 	var schema core.Schema
 	var currentTable string
@@ -105,6 +119,9 @@ func structured_schema_from(_rows *sql.Rows) core.Schema {
 	return schema
 }
 
+// Extract_schema retrieves the schema from the database and returns it as a data structure
+// Currently this panics if there is an error, but it is intended to eventually return a tuple of (schema, error)
+// TODO: Return a tuple of (schema, error)
 func Extract_schema() core.Schema {
 	// Connect to the database
 	db, err := connect_to_db()
