@@ -91,8 +91,8 @@ func main() {
 	permission_restrictor := restrict_to_table_for_user(db, designated_user)
 
 	augmented_schema := augment_schema(schema, links)
-
-	d2 := schema_to_d2(augmented_schema, permission_restrictor, table_groups)
+	restricted_schema := restrict(augmented_schema, permission_restrictor)
+	d2 := schema_to_d2(restricted_schema, table_groups)
 
 	fmt.Println(d2)
 
