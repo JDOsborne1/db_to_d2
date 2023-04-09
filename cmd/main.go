@@ -7,12 +7,6 @@ import (
 	"virtual"
 )
 
-type Table core.Table
-type Column core.Column
-type Reference core.Reference
-type Schema core.Schema
-type TableGroup core.TableGroup
-
 type options struct {
 	use_virtual_links bool
 	use_table_groups  bool
