@@ -13,7 +13,7 @@ export VIRTUAL_LINKS_PATH="example_virtual_links.json"
 export DESIGNATED_USER="'testuser'@'%'"
 
 # config vars
-export D2_TARGET_DB_TYPE="mysql"
+export D2_TARGET_DB_TYPE="mysql" # accepts mysql
 export VIRTUAL_LINKS="true"
 export TABLE_GROUPS="true"
 export RESTRICTOR_TYPE="minimal" # accepts user or minimal
