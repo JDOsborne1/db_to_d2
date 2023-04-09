@@ -1,3 +1,8 @@
 go 1.20
 
-use ./cmd
+use (
+	./cmd
+	./pkg/core
+	./pkg/mysql
+	./pkg/virtual
+)

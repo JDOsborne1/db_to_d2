@@ -1,11 +1,12 @@
-package main
+package core
 
 import (
 	"fmt"
 	"strings"
 )
 
-func schema_to_d2(schema Schema, _groups []TableGroup) string {
+// Converts a schema to a string containing corresponding d2 definitions. 
+func Schema_to_d2(schema Schema, _groups []TableGroup) string {
 	var builder strings.Builder
 	groupings := make(map[string][]Table)
 	table_group_check := make(map[string]bool)
@@ -60,6 +61,7 @@ func schema_to_d2(schema Schema, _groups []TableGroup) string {
 	return builder.String()
 }
 
+// Creates the d2 definition for a single table
 func table_to_d2(_table Table) string {
 	var builder strings.Builder
 

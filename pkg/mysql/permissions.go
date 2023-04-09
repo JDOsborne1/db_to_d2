@@ -1,10 +1,13 @@
-package main
+package mysql
 
 import (
+	"core"
 	"database/sql"
 )
 
-type UserColumnPermission struct {
+// userColumnPermission is a struct that contains the information about a user's permission
+// on a column.
+type userColumnPermission struct {
 	User   string
 	Table  string
 	Column string
@@ -14,8 +17,10 @@ type UserColumnPermission struct {
 // The `get_column_level_permissions` function applies only at the column permission level.
 // It does not apply at the table level, and it does not apply at the database level.
 // A different function will be needed to apply at those levels.
-func get_column_level_permissions(db *sql.DB) ([]UserColumnPermission, error) {
-	var permissions []UserColumnPermission
+// The function does not discriminate between users. It returns a slice of column permissions
+// for all users.
+func get_column_level_permissions(db *sql.DB) ([]userColumnPermission, error) {
+	var permissions []userColumnPermission
 
 	rows, err := db.Query(`
 		SELECT
@@ -52,7 +57,7 @@ func get_column_level_permissions(db *sql.DB) ([]UserColumnPermission, error) {
 			return nil, err
 		}
 
-		permissions = append(permissions, UserColumnPermission{
+		permissions = append(permissions, userColumnPermission{
 			User:   user,
 			Table:  table,
 			Column: column,
@@ -68,7 +73,9 @@ func get_column_level_permissions(db *sql.DB) ([]UserColumnPermission, error) {
 	return permissions, nil
 }
 
-type UserTablePermission struct {
+// userTablePermission is a struct that contains the information about a user's permission
+// on a table.
+type userTablePermission struct {
 	User   string
 	Table  string
 	Select bool
@@ -77,8 +84,10 @@ type UserTablePermission struct {
 // The `get_table_level_permissions` function applies only at the column permission level.
 // It does not apply at the table level, and it does not apply at the database level.
 // A different function will be needed to apply at those levels.
-func get_table_level_permissions(db *sql.DB) ([]UserTablePermission, error) {
-	var permissions []UserTablePermission
+// This will not discriminate based on user, so will return a slice of all table permissions
+// for all users.
+func get_table_level_permissions(db *sql.DB) ([]userTablePermission, error) {
+	var permissions []userTablePermission
 
 	rows, err := db.Query(`
 	SELECT Grantee,
@@ -110,7 +119,7 @@ func get_table_level_permissions(db *sql.DB) ([]UserTablePermission, error) {
 			return nil, err
 		}
 
-		permissions = append(permissions, UserTablePermission{
+		permissions = append(permissions, userTablePermission{
 			User:   user,
 			Table:  table,
 			Select: hasSelectPermission.Valid && hasSelectPermission.Int64 > 0,
@@ -125,7 +134,7 @@ func get_table_level_permissions(db *sql.DB) ([]UserTablePermission, error) {
 	return permissions, nil
 }
 
-func permission_driven_restrictor(_table_permissions []UserTablePermission, _column_permissions []UserColumnPermission, _for_user string) Restrictor {
+func permission_driven_restrictor(_table_permissions []userTablePermission, _column_permissions []userColumnPermission, _for_user string) core.Restrictor {
 	table_permission_map := make(map[string]bool)
 	for _, permission := range _table_permissions {
 		if permission.User == _for_user {
@@ -143,19 +152,24 @@ func permission_driven_restrictor(_table_permissions []UserTablePermission, _col
 		}
 	}
 
-	return func(_table Table, _column Column) bool {
+	return func(_table core.Table, _column core.Column) bool {
 		allowed := table_permission_map[_table.Name] || column_permission_map[_table.Name][_column.Name]
 		return !allowed
 	}
 }
 
-func restrict_to_table_for_user(_db *sql.DB, _username string) Restrictor {
-	table_permissions, err := get_table_level_permissions(_db)
+func Restrict_to_table_for_user(_username string) core.Restrictor {
+	db, err := connect_to_db()
 	if err != nil {
 		panic(err)
 	}
 
-	column_permissions, err := get_column_level_permissions(_db)
+	table_permissions, err := get_table_level_permissions(db)
+	if err != nil {
+		panic(err)
+	}
+
+	column_permissions, err := get_column_level_permissions(db)
 	if err != nil {
 		panic(err)
 	}

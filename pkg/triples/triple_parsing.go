@@ -1,4 +1,4 @@
-package main
+package triples
 
 import (
 	"encoding/json"
@@ -6,9 +6,10 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"core"
 )
 
-func generate_turtle_from_schema(_schema Schema) string {
+func generate_turtle_from_schema(_schema core.Schema) string {
 	// Create a map of namespace prefixes and URIs
 	prefixes := map[string]string{
 		"rdf":  "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
