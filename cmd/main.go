@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
 // Column represents a single column in a database table.
@@ -88,11 +89,12 @@ func main() {
 
 	table_groups := get_table_groups()
 
-	designated_user := "'testuser'@'%'"
-
+	designated_user := os.Getenv("DESIGNATED_USER")
+	
 	permission_restrictor := restrict_to_table_for_user(db, designated_user)
 
 	augmented_schema := augment_schema(schema, links)
+
 	d2 := schema_to_d2(augmented_schema, permission_restrictor, table_groups)
 
 	fmt.Println(d2)
