@@ -49,5 +49,6 @@ func get_options() options {
 		use_virtual_links: os.Getenv("VIRTUAL_LINKS") == "true",
 		use_table_groups:  os.Getenv("TABLE_GROUPS") == "true",
 		restrictor_type:   os.Getenv("RESTRICTOR_TYPE"),
+		db_source_type:    os.Getenv("DB_SOURCE_TYPE"),
 	}
 }

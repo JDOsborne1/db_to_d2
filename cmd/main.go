@@ -13,13 +13,22 @@ type options struct {
 	use_virtual_links bool
 	use_table_groups  bool
 	restrictor_type   string // "user" or "minimal"
+	db_source_type    string // "mysql"
 }
 
 func main() {
 
-	schema := mysql.Extract_schema()
-
 	options := get_options()
+
+	var schema core.Schema
+
+	switch options.db_source_type {
+	case "mysql":
+		schema = mysql.Extract_schema()
+	default:
+		fmt.Println("Invalid db_source_type")
+		return
+	}
 
 	if options.use_virtual_links {
 		schema = virtual.Augment_schema(schema, get_virtual_links())
@@ -31,6 +40,8 @@ func main() {
 		schema = core.Restrict(schema, permission_restrictor)
 	case "minimal":
 		schema = core.Restrict(schema, core.Minimalist)
+	default:
+		fmt.Println("Invalid restrictor_type, using default")
 	}
 
 	var d2 string
