@@ -4,13 +4,20 @@ import (
 	"core"
 )
 
+// VirtualLink is a struct that contains the information needed to create a virtual link between two tables
 type VirtualLink struct {
-	SourceTable      string `json:"source_table,omitempty"`
-	SourceColumn     string `json:"source_column,omitempty"`
-	ReferencedTable  string `json:"referenced_table,omitempty"`
+	// SourceTable is the name of the table that will have a virtual link
+	SourceTable string `json:"source_table,omitempty"`
+	// SourceColumn is the name of the column that will have a virtual link
+	SourceColumn string `json:"source_column,omitempty"`
+	// ReferencedTable is the name of the table that will be referenced by the virtual link
+	ReferencedTable string `json:"referenced_table,omitempty"`
+	// ReferencedColumn is the name of the column that will be referenced by the virtual link
 	ReferencedColumn string `json:"referenced_column,omitempty"`
 }
 
+// Augment_schema takes a schema and a list of virtual links and returns a new schema with the virtual links added
+// this loops through the virtual links and calls augment_tables on each one.
 func Augment_schema(_input core.Schema, _links []VirtualLink) core.Schema {
 	for _, link := range _links {
 		_input = augment_tables(_input, link)
@@ -18,6 +25,9 @@ func Augment_schema(_input core.Schema, _links []VirtualLink) core.Schema {
 	return _input
 }
 
+// augment_tables takes a schema and a virtual link and returns a new schema with the virtual link added
+// this adds a virtual link to the source table, and another to the referenced table. This is not typical of a
+// normal database, but it is necessary for the minimalist option to pick up both sides of the link.
 func augment_tables(_input core.Schema, _link VirtualLink) core.Schema {
 	new_tables := []core.Table{}
 	for _, table := range _input.Tables {
