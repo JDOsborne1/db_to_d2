@@ -148,3 +148,18 @@ func permission_driven_restrictor(_table_permissions []UserTablePermission, _col
 		return !allowed
 	}
 }
+
+
+func restrict_to_table_for_user(_db *sql.DB, _username string) func(Table, Column) bool {
+	table_permissions, err := get_table_level_permissions(_db)
+	if err != nil {
+		panic(err)
+	}
+
+	column_permissions, err := get_column_level_permissions(_db)
+	if err != nil {
+		panic(err)
+	}
+
+	return permission_driven_restrictor(table_permissions, column_permissions, _username)
+}
