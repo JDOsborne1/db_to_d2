@@ -20,8 +20,6 @@ Which will install the application in your GOBIN directory, which is assumed to 
 
 The binary makes use of several environment variables to function, including for connection credentials. This is currently the only method supported, but please see the roadmap for future plans in this space.
 
-> It is possible to make use of a tool like `incredible-cli` to make this more straightforward with minimal security compromises. 
-
 An example of all the possible environment variables which you can use, along with possible options, can be found in `connection_vars.sh` in the root of the repo. At this stage, only the DB connection variables are required for the program to function, all the others have workable defaults. 
 
 You will then want to run `rdb_to_rdf2` which will output the d2 of the database you've pointed it at. You can then pipe this `>` into a .d2 file which you can then render with the d2 commandline tool. 
