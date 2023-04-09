@@ -7,10 +7,12 @@ import (
 	"virtual"
 )
 
+// options is a struct that contains the options for the program.
+// TODO: Add validation for options
 type options struct {
 	use_virtual_links bool
 	use_table_groups  bool
-	restrictor_type   string
+	restrictor_type   string // "user" or "minimal"
 }
 
 func main() {
