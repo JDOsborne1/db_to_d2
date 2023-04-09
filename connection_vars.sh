@@ -11,3 +11,6 @@ export D2_TARGET_DB_NAME="testdb"
 export TABLE_GROUPS_PATH="example_table_groups.json"
 export VIRTUAL_LINKS_PATH="example_virtual_links.json"
 export DESIGNATED_USER="'testuser'@'%'"
+export VIRTUAL_LINKS="true"
+export TABLE_GROUPS="true"
+export RESTRICTOR_TYPE="user" # accepts user or minimalist

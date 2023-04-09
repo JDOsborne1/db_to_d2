@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 )
 
 // Column represents a single column in a database table.
@@ -68,7 +67,11 @@ type TableGroup struct {
 	Tables []string `json:"tables,omitempty"`
 }
 
-
+type options struct {
+	use_virtual_links bool
+	use_table_groups  bool
+	restrictor_type   string
+}
 
 func main() {
 	// Connect to the MySQL database
@@ -82,17 +85,26 @@ func main() {
 
 	schema := structured_schema_from(db_schema)
 
-	links := get_virtual_links()
+	options := get_options()
 
-	table_groups := get_table_groups()
+	if options.use_virtual_links {
+		schema = augment_schema(schema, get_virtual_links())
+	}
 
-	designated_user := os.Getenv("DESIGNATED_USER")
-	
-	permission_restrictor := restrict_to_table_for_user(db, designated_user)
+	switch options.restrictor_type {
+	case "user":
+		permission_restrictor := restrict_to_table_for_user(db, get_designated_user())
+		schema = restrict(schema, permission_restrictor)
+	case "minimal":
+		schema = restrict(schema, minimalist)
+	}
 
-	augmented_schema := augment_schema(schema, links)
-	restricted_schema := restrict(augmented_schema, permission_restrictor)
-	d2 := schema_to_d2(restricted_schema, table_groups)
+	var d2 string
+	if options.use_table_groups {
+		d2 = schema_to_d2(schema, get_table_groups())
+	} else {
+		d2 = schema_to_d2(schema, []TableGroup{})
+	}
 
 	fmt.Println(d2)
 

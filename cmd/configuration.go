@@ -27,3 +27,15 @@ func get_table_groups() []TableGroup {
 	json.Unmarshal(table_groups_json, &table_groups)
 	return table_groups
 }
+
+func get_designated_user() string {
+	return os.Getenv("DESIGNATED_USER")
+}
+
+func get_options() options {
+	return options{
+		use_virtual_links: os.Getenv("USE_VIRTUAL_LINKS") == "true",
+		use_table_groups:  os.Getenv("USE_TABLE_GROUPS") == "true",
+		restrictor_type:   os.Getenv("RESTRICTOR_TYPE"),
+	}
+}
