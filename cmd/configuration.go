@@ -36,8 +36,8 @@ func get_designated_user() string {
 
 func get_options() options {
 	return options{
-		use_virtual_links: os.Getenv("USE_VIRTUAL_LINKS") == "true",
-		use_table_groups:  os.Getenv("USE_TABLE_GROUPS") == "true",
+		use_virtual_links: os.Getenv("VIRTUAL_LINKS") == "true",
+		use_table_groups:  os.Getenv("TABLE_GROUPS") == "true",
 		restrictor_type:   os.Getenv("RESTRICTOR_TYPE"),
 	}
 }
