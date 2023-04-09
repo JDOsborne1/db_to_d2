@@ -20,16 +20,8 @@ type options struct {
 }
 
 func main() {
-	// Connect to the MySQL database
-	db, err := mysql.Connect_to_db()
-	if err != nil {
-		panic(err)
-	}
-	defer db.Close()
-	db_schema := mysql.Information_schema_from(db)
-	defer db_schema.Close()
 
-	schema := mysql.Structured_schema_from(db_schema)
+	schema := mysql.Extract_schema()
 
 	options := get_options()
 
@@ -39,7 +31,7 @@ func main() {
 
 	switch options.restrictor_type {
 	case "user":
-		permission_restrictor := mysql.Restrict_to_table_for_user(db, get_designated_user())
+		permission_restrictor := mysql.Restrict_to_table_for_user(get_designated_user())
 		schema = core.Restrict(schema, permission_restrictor)
 	case "minimal":
 		schema = core.Restrict(schema, core.Minimalist)

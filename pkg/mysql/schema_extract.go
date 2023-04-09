@@ -4,11 +4,12 @@ import (
 	"core"
 	"database/sql"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"os"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
-func Connect_to_db() (*sql.DB, error) {
+func connect_to_db() (*sql.DB, error) {
 	user := os.Getenv("D2_TARGET_DB_USER")
 	password := os.Getenv("D2_TARGET_DB_PASSWORD")
 	host := os.Getenv("D2_TARGET_DB_HOST")
@@ -32,7 +33,7 @@ func Connect_to_db() (*sql.DB, error) {
 	return db, nil
 }
 
-func Information_schema_from(_db *sql.DB) *sql.Rows {
+func information_schema_from(_db *sql.DB) *sql.Rows {
 
 	// Retrieve the table and column information from the information schema
 	rows, err := _db.Query(`
@@ -50,7 +51,7 @@ func Information_schema_from(_db *sql.DB) *sql.Rows {
 	return rows
 }
 
-func Structured_schema_from(_rows *sql.Rows) core.Schema {
+func structured_schema_from(_rows *sql.Rows) core.Schema {
 	var schema core.Schema
 	var currentTable string
 	var currentColumns []core.Column
@@ -94,6 +95,23 @@ func Structured_schema_from(_rows *sql.Rows) core.Schema {
 	if len(currentColumns) > 0 {
 		schema.Tables = append(schema.Tables, core.Table{Name: currentTable, Columns: currentColumns})
 	}
+
+	return schema
+}
+
+func Extract_schema() core.Schema {
+	// Connect to the database
+	db, err := connect_to_db()
+	if err != nil {
+		panic(err.Error())
+	}
+	defer db.Close()
+
+	// Retrieve the schema from the database
+	rows := information_schema_from(db)
+
+	// Build the data structure
+	schema := structured_schema_from(rows)
 
 	return schema
 }

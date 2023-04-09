@@ -150,13 +150,18 @@ func permission_driven_restrictor(_table_permissions []UserTablePermission, _col
 	}
 }
 
-func Restrict_to_table_for_user(_db *sql.DB, _username string) core.Restrictor {
-	table_permissions, err := get_table_level_permissions(_db)
+func Restrict_to_table_for_user(_username string) core.Restrictor {
+	db, err := connect_to_db()
 	if err != nil {
 		panic(err)
 	}
 
-	column_permissions, err := get_column_level_permissions(_db)
+	table_permissions, err := get_table_level_permissions(db)
+	if err != nil {
+		panic(err)
+	}
+
+	column_permissions, err := get_column_level_permissions(db)
 	if err != nil {
 		panic(err)
 	}
