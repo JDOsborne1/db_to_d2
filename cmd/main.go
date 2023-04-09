@@ -72,6 +72,20 @@ type TableGroup struct {
 	Tables []string `json:"tables,omitempty"`
 }
 
+func get_virtual_links () []VirtualLink {
+	links := []VirtualLink{}
+	links_json, _ := os.ReadFile("example_virtual_links.json")
+	json.Unmarshal(links_json, &links)
+	return links
+}
+
+func get_table_groups() []TableGroup {
+	table_groups := []TableGroup{}
+	table_groups_json, _ := os.ReadFile("example_table_groups.json")
+	json.Unmarshal(table_groups_json, &table_groups)
+	return table_groups
+}
+
 func main() {
 	// Connect to the MySQL database
 	db, err := connect_to_db()
@@ -84,14 +98,9 @@ func main() {
 
 	schema := structured_schema_from(db_schema)
 
-	links := []VirtualLink{}
-	links_json, _ := os.ReadFile("example_virtual_links.json")
-	json.Unmarshal(links_json, &links)
+	links := get_virtual_links()
 
-	table_groups := []TableGroup{}
-
-	table_groups_json, _ := os.ReadFile("example_table_groups.json")
-	json.Unmarshal(table_groups_json, &table_groups)
+	table_groups := get_table_groups()
 
 	designated_user := "'testuser'@'%'"
 
