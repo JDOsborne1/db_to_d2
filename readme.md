@@ -12,7 +12,7 @@ The following is assumed at this point in time:
 - You have `d2` installed
 
 Currently there is no distributable, so you will need to:
-- `git clone git@github.com:JDOsborne1/rdb_to_rdf2.git`
+- `git clone git@gitlab.com:JDOsborne1/db_to_d2.git`
 - `cd cmd/`
 - `go install`
 
@@ -22,7 +22,7 @@ The binary makes use of several environment variables to function, including for
 
 An example of all the possible environment variables which you can use, along with possible options, can be found in `connection_vars.sh` in the root of the repo. At this stage, only the DB connection variables are required for the program to function, all the others have workable defaults. 
 
-You will then want to run `rdb_to_rdf2` which will output the d2 of the database you've pointed it at. You can then pipe this `>` into a .d2 file which you can then render with the d2 commandline tool. 
+You will then want to run `db_to_d2` which will output the d2 of the database you've pointed it at. You can then pipe this `>` into a .d2 file which you can then render with the d2 commandline tool. 
 
 It is recommended to use the -l "tala" option, which renders ERD diagrams the best, but this assumes that you also have `tala` installed, and that you either have a license, or aren't disturbed by the 'UNLICENSED' watermark.
 
