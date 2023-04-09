@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func schema_to_d2(schema Schema, _restrictor func(Table, Column) bool, _groups []TableGroup) string {
+func schema_to_d2(schema Schema, _restrictor Restrictor, _groups []TableGroup) string {
 	var builder strings.Builder
 	groupings := make(map[string][]Table)
 	table_group_check := make(map[string]bool)
@@ -60,7 +60,7 @@ func schema_to_d2(schema Schema, _restrictor func(Table, Column) bool, _groups [
 	return builder.String()
 }
 
-func table_to_d2(_table Table, _restrictor func(Table, Column) bool) string {
+func table_to_d2(_table Table, _restrictor Restrictor) string {
 	var builder strings.Builder
 
 	builder.WriteString(fmt.Sprintf("%s: {\n  shape: sql_table\n", _table.Name))
