@@ -1,5 +1,5 @@
 mysql_data/*
 data/*
-cmd/rdb_to_rdf2
 *.d2
 *.svg
+cmd/db_to_d2
