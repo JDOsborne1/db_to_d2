@@ -18,15 +18,19 @@ func augment_tables(_input Schema, _link VirtualLink) Schema {
 	new_tables := []Table{}
 	for _, table := range _input.Tables {
 		if table.Name == _link.SourceTable {
-			table = augment_columns(table, _link)
+			table = augment_columns_source(table, _link)
 		}
+		if table.Name == _link.ReferencedTable {
+			table = augment_columns_reference(table, _link)
+		}
+
 		new_tables = append(new_tables, table)
 	}
 	_input.Tables = new_tables
 	return _input
 }
 
-func augment_columns(_table Table, _links VirtualLink) Table {
+func augment_columns_source(_table Table, _links VirtualLink) Table {
 	new_columns := []Column{}
 	for _, column := range _table.Columns {
 		if column.Name == _links.SourceColumn {
@@ -36,6 +40,19 @@ func augment_columns(_table Table, _links VirtualLink) Table {
 			}
 			column.Key = "VIRTUAL"
 			column.Extra = "Virtual link to " + _links.ReferencedTable + "." + _links.ReferencedColumn
+		}
+		new_columns = append(new_columns, column)
+	}
+	_table.Columns = new_columns
+	return _table
+}
+
+func augment_columns_reference(_table Table, _links VirtualLink) Table {
+	new_columns := []Column{}
+	for _, column := range _table.Columns {
+		if column.Name == _links.ReferencedColumn {
+			column.Key = "VIRTUAL"
+			column.Extra = "Virtual link from " + _links.SourceTable + "." + _links.SourceColumn
 		}
 		new_columns = append(new_columns, column)
 	}
