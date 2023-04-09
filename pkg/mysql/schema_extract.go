@@ -1,14 +1,14 @@
-package main
+package mysql
 
 import (
 	"fmt"
 	"os"
-
+"core"
 	"database/sql"
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func connect_to_db() (*sql.DB, error) {
+func Connect_to_db() (*sql.DB, error) {
 	user := os.Getenv("D2_TARGET_DB_USER")
 	password := os.Getenv("D2_TARGET_DB_PASSWORD")
 	host := os.Getenv("D2_TARGET_DB_HOST")
@@ -32,7 +32,7 @@ func connect_to_db() (*sql.DB, error) {
 	return db, nil
 }
 
-func information_schema_from(_db *sql.DB) *sql.Rows {
+func Information_schema_from(_db *sql.DB) *sql.Rows {
 
 	// Retrieve the table and column information from the information schema
 	rows, err := _db.Query(`
@@ -50,10 +50,10 @@ func information_schema_from(_db *sql.DB) *sql.Rows {
 	return rows
 }
 
-func structured_schema_from(_rows *sql.Rows) Schema {
-	var schema Schema
+func Structured_schema_from(_rows *sql.Rows) core.Schema {
+	var schema core.Schema
 	var currentTable string
-	var currentColumns []Column
+	var currentColumns []core.Column
 
 	// Loop through each row and build the data structure
 	for _rows.Next() {
@@ -65,14 +65,14 @@ func structured_schema_from(_rows *sql.Rows) Schema {
 		// If the table name has changed, add the current table to the schema and start a new one
 		if tableName.String != currentTable {
 			if len(currentColumns) > 0 {
-				schema.Tables = append(schema.Tables, Table{Name: currentTable, Columns: currentColumns})
+				schema.Tables = append(schema.Tables, core.Table{Name: currentTable, Columns: currentColumns})
 			}
 			currentTable = tableName.String
-			currentColumns = []Column{}
+			currentColumns = []core.Column{}
 		}
 
 		// Create a new column and add it to the current table
-		column := Column{
+		column := core.Column{
 			Name:     columnName.String,
 			Type:     columnType.String,
 			Nullable: isNullable.String == "YES",
@@ -81,7 +81,7 @@ func structured_schema_from(_rows *sql.Rows) Schema {
 		}
 
 		if referencedTable.Valid && referencedColumn.Valid {
-			column.Reference = &Reference{
+			column.Reference = &core.Reference{
 				Table:  referencedTable.String,
 				Column: referencedColumn.String,
 			}
@@ -92,7 +92,7 @@ func structured_schema_from(_rows *sql.Rows) Schema {
 
 	// Add the last table to the schema
 	if len(currentColumns) > 0 {
-		schema.Tables = append(schema.Tables, Table{Name: currentTable, Columns: currentColumns})
+		schema.Tables = append(schema.Tables, core.Table{Name: currentTable, Columns: currentColumns})
 	}
 
 	return schema

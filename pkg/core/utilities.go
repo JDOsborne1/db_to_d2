@@ -1,4 +1,4 @@
-package main
+package core
 
 func in_set(_element string, _set []string) bool {
 	for _, element := range _set {

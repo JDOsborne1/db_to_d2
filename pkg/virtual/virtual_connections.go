@@ -1,4 +1,6 @@
-package main
+package virtual
+
+import ( "core" )
 
 type VirtualLink struct {
 	SourceTable      string `json:"source_table,omitempty"`
@@ -7,15 +9,15 @@ type VirtualLink struct {
 	ReferencedColumn string `json:"referenced_column,omitempty"`
 }
 
-func augment_schema(_input Schema, _links []VirtualLink) Schema {
+func Augment_schema(_input core.Schema, _links []VirtualLink) core.Schema {
 	for _, link := range _links {
 		_input = augment_tables(_input, link)
 	}
 	return _input
 }
 
-func augment_tables(_input Schema, _link VirtualLink) Schema {
-	new_tables := []Table{}
+func augment_tables(_input core.Schema, _link VirtualLink) core.Schema {
+	new_tables := []core.Table{}
 	for _, table := range _input.Tables {
 		if table.Name == _link.SourceTable {
 			table = augment_columns_source(table, _link)
@@ -30,11 +32,11 @@ func augment_tables(_input Schema, _link VirtualLink) Schema {
 	return _input
 }
 
-func augment_columns_source(_table Table, _links VirtualLink) Table {
-	new_columns := []Column{}
+func augment_columns_source(_table core.Table, _links VirtualLink) core.Table {
+	new_columns := []core.Column{}
 	for _, column := range _table.Columns {
 		if column.Name == _links.SourceColumn {
-			column.Reference = &Reference{
+			column.Reference = &core.Reference{
 				Table:  _links.ReferencedTable,
 				Column: _links.ReferencedColumn,
 			}
@@ -47,8 +49,8 @@ func augment_columns_source(_table Table, _links VirtualLink) Table {
 	return _table
 }
 
-func augment_columns_reference(_table Table, _links VirtualLink) Table {
-	new_columns := []Column{}
+func augment_columns_reference(_table core.Table, _links VirtualLink) core.Table {
+	new_columns := []core.Column{}
 	for _, column := range _table.Columns {
 		if column.Name == _links.ReferencedColumn {
 			column.Key = "VIRTUAL"

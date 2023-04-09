@@ -1,4 +1,4 @@
-package main
+package core
 
 import (
 	"reflect"
@@ -23,7 +23,7 @@ func TestRestrictionsIdentity(t *testing.T) {
 	expected := input
 
 	//Execute test
-	actual := restrict(input, standard)
+	actual := Restrict(input, standard)
 
 	//Compare actual to expected
 	if !reflect.DeepEqual(actual, expected) {

@@ -1,7 +1,8 @@
-package main
+package mysql
 
 import (
 	"database/sql"
+	"core"
 )
 
 type UserColumnPermission struct {
@@ -125,7 +126,7 @@ func get_table_level_permissions(db *sql.DB) ([]UserTablePermission, error) {
 	return permissions, nil
 }
 
-func permission_driven_restrictor(_table_permissions []UserTablePermission, _column_permissions []UserColumnPermission, _for_user string) Restrictor {
+func permission_driven_restrictor(_table_permissions []UserTablePermission, _column_permissions []UserColumnPermission, _for_user string) core.Restrictor {
 	table_permission_map := make(map[string]bool)
 	for _, permission := range _table_permissions {
 		if permission.User == _for_user {
@@ -143,13 +144,13 @@ func permission_driven_restrictor(_table_permissions []UserTablePermission, _col
 		}
 	}
 
-	return func(_table Table, _column Column) bool {
+	return func(_table core.Table, _column core.Column) bool {
 		allowed := table_permission_map[_table.Name] || column_permission_map[_table.Name][_column.Name]
 		return !allowed
 	}
 }
 
-func restrict_to_table_for_user(_db *sql.DB, _username string) Restrictor {
+func Restrict_to_table_for_user(_db *sql.DB, _username string) core.Restrictor {
 	table_permissions, err := get_table_level_permissions(_db)
 	if err != nil {
 		panic(err)

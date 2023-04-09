@@ -4,10 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"core"
+	"virtual"
 )
 
-func get_virtual_links() []VirtualLink {
-	links := []VirtualLink{}
+func get_virtual_links() []virtual.VirtualLink {
+	links := []virtual.VirtualLink{}
 	links_json, err := os.ReadFile(os.Getenv("VIRTUAL_LINKS_PATH"))
 	if err != nil {
 		//TODO: Log error, or bubble up instead of printing to console
@@ -17,8 +19,8 @@ func get_virtual_links() []VirtualLink {
 	return links
 }
 
-func get_table_groups() []TableGroup {
-	table_groups := []TableGroup{}
+func get_table_groups() []core.TableGroup {
+	table_groups := []core.TableGroup{}
 	table_groups_json, err := os.ReadFile(os.Getenv("TABLE_GROUPS_PATH"))
 	if err != nil {
 		//TODO: Log error, or bubble up instead of printing to console

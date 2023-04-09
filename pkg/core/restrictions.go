@@ -1,8 +1,8 @@
-package main
+package core
 
 type Restrictor func(Table, Column) bool
 
-func minimalist(_table Table, _column Column) bool {
+func Minimalist(_table Table, _column Column) bool {
 	return _column.Key == ""
 }
 
@@ -10,7 +10,7 @@ func standard(_table Table, _column Column) bool {
 	return false
 }
 
-func restrict(_schema Schema, _restrictor Restrictor) Schema {
+func Restrict(_schema Schema, _restrictor Restrictor) Schema {
 	new_tables := []Table{}
 	for _, table := range _schema.Tables {
 		new_columns := []Column{}
