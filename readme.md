@@ -38,3 +38,4 @@ It is recommended to use the -l "tala" option, which renders ERD diagrams the be
     - MSSQL
     - PostgreSQL
 - Support Multi-schema diagrams (possibly using D2s multi-diagram options)
+- (Possibly) break out `d2` elements of the core package to enable other diagramming tools to be used
