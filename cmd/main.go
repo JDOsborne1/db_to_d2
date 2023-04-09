@@ -54,9 +54,6 @@ type Table struct {
 type Schema struct {
 	// Tables is a slice of Table structs that represent the tables in the schema.
 	Tables []Table
-
-	// Indexes is a slice of strings that represent the indexes in the schema.
-	Indexes []string
 }
 
 // TableGroup represents a group of tables in a database schema.
