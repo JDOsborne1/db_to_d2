@@ -15,6 +15,12 @@ func connect_to_db() (*sql.DB, error) {
 	host := os.Getenv("D2_TARGET_DB_HOST")
 	port := os.Getenv("D2_TARGET_DB_PORT")
 	dbname := os.Getenv("D2_TARGET_DB_NAME")
+	essential_vars := []string{user, password, host, port, dbname}
+	for _, v := range essential_vars {
+		if v == "" {
+			return nil, fmt.Errorf("missing environment variable")
+		}
+	}
 
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, host, port, dbname)
 
