@@ -63,13 +63,13 @@ type Schema struct {
 // TableGroup represents a group of tables in a database schema.
 type TableGroup struct {
 	// Tag is a string that identifies the group.
-	Tag string
+	Tag string `json:"tag,omitempty"`
 
 	// Name is the name of the group.
-	Name string
+	Name string `json:"name,omitempty"`
 
 	// Tables is a slice of strings that represent the names of the tables in the group.
-	Tables []string
+	Tables []string `json:"tables,omitempty"`
 }
 
 func main() {

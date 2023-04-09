@@ -1,16 +1,16 @@
 [
   {
-    "Tag": "ugc",
-    "Name": "User Generated Content",
-    "Tables": [
+    "tag": "ugc",
+    "name": "User Generated Content",
+    "tables": [
       "comments",
       "posts"
     ]
   },
   {
-    "Tag": "pii",
-    "Name": "Personally Identifiable Information",
-    "Tables": [
+    "tag": "pii",
+    "name": "Personally Identifiable Information",
+    "tables": [
       "users"
     ]
   }
