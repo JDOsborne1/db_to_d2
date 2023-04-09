@@ -50,8 +50,8 @@ func connect_to_db() (*sql.DB, error) {
 // This function is used to extract the schema from the database.
 // it uses the information_schema to get the table and column information.
 // Currently it only supports the schema 'testdb'. This will be changed in the future.
-// TODO: Make this function more generic
-func information_schema_from(_db *sql.DB) *sql.Rows {
+// TODO: Make this function consider the schema optional
+func information_schema_from(_db *sql.DB, _schema string) *sql.Rows {
 
 	// Retrieve the table and column information from the information schema
 	rows, err := _db.Query(`
@@ -59,7 +59,7 @@ func information_schema_from(_db *sql.DB) *sql.Rows {
 	FROM INFORMATION_SCHEMA.COLUMNS C
 	LEFT JOIN INFORMATION_SCHEMA.KEY_COLUMN_USAGE KC
 	ON C.COLUMN_NAME = REFERENCED_COLUMN_NAME AND C.TABLE_NAME = REFERENCED_TABLE_NAME 
-	WHERE C.TABLE_SCHEMA = 'testdb'
+	WHERE C.TABLE_SCHEMA = '` + _schema + `'
 	ORDER BY C.TABLE_NAME, KC.ORDINAL_POSITION;
 	`)
 	if err != nil {
@@ -131,7 +131,7 @@ func Extract_schema() core.Schema {
 	defer db.Close()
 
 	// Retrieve the schema from the database
-	rows := information_schema_from(db)
+	rows := information_schema_from(db, os.Getenv("D2_TARGET_DB_NAME"))
 
 	// Build the data structure
 	schema := structured_schema_from(rows)
