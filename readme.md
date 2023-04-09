@@ -18,7 +18,7 @@ Currently there is no distributable, so you will need to:
 
 Which will install the application in your GOBIN directory, which is assumed to be on your path for further instructions. 
 
-The binary makes use of several evironment variables to function, including for connection credentials. This is currently the only method supported, but please see the roadmap for future plans in this space.
+The binary makes use of several environment variables to function, including for connection credentials. This is currently the only method supported, but please see the roadmap for future plans in this space.
 
 > It is possible to make use of a tool like `incredible-cli` to make this more straightforward with minimal security compromises. 
 
