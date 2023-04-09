@@ -13,4 +13,4 @@ export VIRTUAL_LINKS_PATH="example_virtual_links.json"
 export DESIGNATED_USER="'testuser'@'%'"
 export VIRTUAL_LINKS="true"
 export TABLE_GROUPS="true"
-export RESTRICTOR_TYPE="user" # accepts user or minimalist
+export RESTRICTOR_TYPE="minimal" # accepts user or minimal
