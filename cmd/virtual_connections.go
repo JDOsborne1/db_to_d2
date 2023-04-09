@@ -1,10 +1,10 @@
 package main
 
 type VirtualLink struct {
-	source_table      string
-	source_column     string
-	referenced_table  string
-	referenced_column string
+	SourceTable      string `json:"source_table,omitempty"`
+	SourceColumn     string `json:"source_column,omitempty"`
+	ReferencedTable  string `json:"referenced_table,omitempty"`
+	ReferencedColumn string `json:"referenced_column,omitempty"`
 }
 
 func augment_schema(_input Schema, _links []VirtualLink) Schema {
@@ -17,7 +17,7 @@ func augment_schema(_input Schema, _links []VirtualLink) Schema {
 func augment_tables(_input Schema, _link VirtualLink) Schema {
 	new_tables := []Table{}
 	for _, table := range _input.Tables {
-		if table.Name == _link.source_table {
+		if table.Name == _link.SourceTable {
 			table = augment_columns(table, _link)
 		}
 		new_tables = append(new_tables, table)
@@ -29,13 +29,13 @@ func augment_tables(_input Schema, _link VirtualLink) Schema {
 func augment_columns(_table Table, _links VirtualLink) Table {
 	new_columns := []Column{}
 	for _, column := range _table.Columns {
-		if column.Name == _links.source_column {
+		if column.Name == _links.SourceColumn {
 			column.Reference = &Reference{
-				Table:  _links.referenced_table,
-				Column: _links.referenced_column,
+				Table:  _links.ReferencedTable,
+				Column: _links.ReferencedColumn,
 			}
 			column.Key = "VIRTUAL"
-			column.Extra = "Virtual link to " + _links.referenced_table + "." + _links.referenced_column
+			column.Extra = "Virtual link to " + _links.ReferencedTable + "." + _links.ReferencedColumn
 		}
 		new_columns = append(new_columns, column)
 	}

@@ -86,10 +86,10 @@ func main() {
 
 	links := []VirtualLink{}
 	links = append(links, VirtualLink{
-		source_table:      "comments",
-		source_column:     "content",
-		referenced_table:  "posts",
-		referenced_column: "content",
+		SourceTable:      "comments",
+		SourceColumn:     "content",
+		ReferencedTable:  "posts",
+		ReferencedColumn: "content",
 	})
 
 	table_groups := []TableGroup{}
