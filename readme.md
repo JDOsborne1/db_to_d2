@@ -26,6 +26,17 @@ You will then want to run `db_to_d2` which will output the d2 of the database yo
 
 It is recommended to use the -l "tala" option, which renders ERD diagrams the best, but this assumes that you also have `tala` installed, and that you either have a license, or aren't disturbed by the 'UNLICENSED' watermark.
 
+## Local Environment
+
+If you want to test the tool against a stable local system, you can make use of the distributed seeding query. 
+
+In the root directory: 
+- `docker compose up`
+- navigate to localhost:8080
+- Copy contents of `seeding_db.sql` into the phymyadmin query window
+- Hit 'Go' and it should create a new database called `testdb`
+- This db should then be suitable for the example setup contained in `connection_vars.sh`
+
 
 ## Roadmap
 
