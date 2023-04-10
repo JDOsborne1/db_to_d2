@@ -1,0 +1,19 @@
+image: golang:1.20
+
+stages:
+  - build
+
+test:
+  stage: build
+  script:
+    - go test $(go list -m)
+
+build:
+  stage: build
+  script:
+    - go build db_to_d2
+  artifacts:
+    # instead of manually adding i.e. the built binaries, we can instead just
+    # grab anything not tracked in Git
+    untracked: true
+    expire_in: 1 hour
