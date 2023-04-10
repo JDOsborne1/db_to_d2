@@ -19,3 +19,9 @@ jobs:
 
       - name: Build
         run: go build db_to_d2
+
+      - name: Upload built version
+        uses: actions/upload-artifact@v3
+        with:
+          name: package-build
+          path: db_to_d2
