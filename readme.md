@@ -18,6 +18,8 @@ Currently there is no distributable, so you will need to:
 
 Which will install the application in your GOBIN directory, which is assumed to be on your path for further instructions. 
 
+> Alternatively, you can use the `go build` command to build the binary, and then run it directly from the `cmd/` directory.
+
 The binary makes use of several environment variables to function, including for connection credentials. This is currently the only method supported, but please see the roadmap for future plans in this space.
 
 An example of all the possible environment variables which you can use, along with possible options, can be found in `connection_vars.sh` in the root of the repo. At this stage, only the DB connection variables are required for the program to function, all the others have workable defaults. 
