@@ -18,7 +18,10 @@ Currently there is no distributable, so you will need to:
 
 Which will install the application in your GOBIN directory, which is assumed to be on your path for further instructions. 
 
-> Alternatively, you can use the `go build` command to build the binary, and then run it directly from the `cmd/` directory.
+Alternatives: 
+- Use the `go build` command to build the binary, and then run it directly from the `cmd/` directory.
+- Use the `go run` command to run the application directly from the `cmd/` directory.
+- Use any of the build artefacts in the Github Actions pipeline, which are available in the `Actions` tab of the repo.
 
 The binary makes use of several environment variables to function, including for connection credentials. This is currently the only method supported, but please see the roadmap for future plans in this space.
 
