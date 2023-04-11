@@ -13,8 +13,7 @@ func Minimalist(_table Table, _column Column) bool {
 }
 
 // Standard is a Restrictor that excludes no columns. This is the default behavior.
-// BUG: This is not exported. It should be exported
-func standard(_table Table, _column Column) bool {
+func Standard(_table Table, _column Column) bool {
 	return false
 }
 
