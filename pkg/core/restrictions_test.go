@@ -23,7 +23,7 @@ func TestRestrictionsIdentity(t *testing.T) {
 	expected := input
 
 	//Execute test
-	actual := Restrict(input, standard)
+	actual := Restrict(input, Standard)
 
 	//Compare actual to expected
 	if !reflect.DeepEqual(actual, expected) {

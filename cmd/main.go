@@ -36,7 +36,11 @@ func main() {
 
 	switch options.restrictor_type {
 	case "user":
-		permission_restrictor := mysql.Restrict_to_table_for_user(get_designated_user())
+		permission_restrictor, err := mysql.Restrict_to_table_for_user(get_designated_user())
+		if err != nil {
+			fmt.Println("Error getting permission_restrictor, using default")
+			break
+		}
 		schema = core.Restrict(schema, permission_restrictor)
 	case "minimal":
 		schema = core.Restrict(schema, core.Minimalist)
