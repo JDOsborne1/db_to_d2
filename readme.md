@@ -39,7 +39,7 @@ If you use the application with its defaults, and point at a MySQL database, you
 
 ### Grouped Tables
 
-As part of diagramming a large database, you may want to introduce some manual groupings of tables. This is supported by the application, and can be done by adding the groups into a .json file and pointing the application at it's path using the variable `TABLE_GROUPS_PATH`. An example of this can be found in `example_table_groups.json` in the `cmd/` directory.
+As part of diagramming a large database, you may want to introduce some manual groupings of tables. This is supported by the application, and can be done by adding the groups into a .json file and pointing the application at it's path using the variable `TABLE_GROUPS_PATH`. An example of this can be found in `example_table_groups.json` in the `cmd/` directory. Both relative and absolute paths are supported.
 
 This can be of special use when refactoring a database, as you can group tables together which are related, and the diagram will then illustrate the way that your logical groups remain interconnected.
 
@@ -47,7 +47,7 @@ You will need to enable the grouped tables behaviour by setting `TABLE_GROUPS` t
 
 ### Virtual Links
 
-Sometimes you may want to show a relationship between two tables which is not recorded in the database schema. This is supported by the application, and can be done by adding the virtual links into a .json file and pointing the application at it's path using the variable `VIRTUAL_LINKS_PATH`. An example of this can be found in `example_virtual_links.json` in the `cmd/` directory.
+Sometimes you may want to show a relationship between two tables which is not recorded in the database schema. This is supported by the application, and can be done by adding the virtual links into a .json file and pointing the application at it's path using the variable `VIRTUAL_LINKS_PATH`. An example of this can be found in `example_virtual_links.json` in the `cmd/` directory. Both relative and absolute paths are supported.
 
 This feature can be of use when you have either a not very well formed database, where the logical links aren't captured in the structure (for one reason or another, many legitimate). It can also be of use when you have a database which is in the process of being refactored to support some microservices, and you still have multiple services writing to the same database.
 
