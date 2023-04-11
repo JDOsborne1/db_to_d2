@@ -33,7 +33,7 @@ It is recommended to use the -l "tala" option, which renders ERD diagrams the be
 
 ## Features
 
-### Basic ERD diagram
+### Basic ERD Diagram
 
 If you use the application with its defaults, and point at a MySQL database, you will get a basic ERD diagram of the database. This will include all tables, and all foreign keys which are recorded in the database information schema.
 
@@ -53,7 +53,7 @@ This feature can be of use when you have either a not very well formed database,
 
 You will need to enable the virtual links behaviour by setting `VIRTUAL_LINKS` to 'true' in your environment variables.
 
-### Minimalist restrictions
+### Minimalist Restrictions
 
 When diagramming a large database, you may find yourself hitting the limitations of your chosen layout engine. This is especially common when you are working with a database where the tables have lots of columns. This is reasonably common if you have a database with a low level of normalisation, intentional or otherwise. 
 
@@ -61,7 +61,7 @@ You can simplify this by restricting the application to only display the columns
 
 You can enable this by setting the environment variable `RESTRICTOR_TYPE` to 'minimal'. 
 
-### User permission restrictions
+### User Permission Restrictions
 
 For purposes of access management, it can be of use to create a view of the tables and columns which are accessible to a particular user. This can be done by setting the environment variable `RESTRICTOR_TYPE` to 'user'. 
 
