@@ -100,3 +100,11 @@ In the root directory:
     - PostgreSQL
 - Support Multi-schema diagrams (possibly using D2s multi-diagram options)
 - (Possibly) break out `d2` elements of the core package to enable other diagramming tools to be used
+
+## Versioning
+
+The project will be versioned with Semantic Versioning, as recommended by Github and Gitlab.
+
+The Public API surface of this repo is the behaviour of the binary itself, as documented in this readme, and in the package documentation associated with that build. 
+
+Special consideration will be given to the interfaces in the `core` package, for those who may eventually use it as a basis in other tooling. These are currently subject to change as part of the intial development, but are intended to be included as part of the public API for version 1.
