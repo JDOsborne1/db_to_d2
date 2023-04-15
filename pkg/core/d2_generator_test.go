@@ -17,9 +17,11 @@ func Test_d2_generator(t *testing.T) {
 				Columns: []Column{
 					{
 						Name: "col1",
+						Type: "int",
 					},
 					{
 						Name: "col2",
+						Type: "varchar",
 					},
 				},
 			},
@@ -28,32 +30,34 @@ func Test_d2_generator(t *testing.T) {
 				Columns: []Column{
 					{
 						Name: "col1",
+						Type: "int",
 					},
 					{
 						Name: "col2",
+						Type: "varchar",
 					},
 				},
 			},
 		},
 	}
 
-	expected := `table1: {
-					shape: sql_table
-  					col1: 
-  					col2:
-					}
-					
-				table2: {
-					shape: sql_table
-	  				col1:
-	  				col2:
-					}`
+expected := `table1: {
+  shape: sql_table
+  col1: int
+  col2: varchar
+}
+
+table2: {
+  shape: sql_table
+  col1: int
+  col2: varchar
+}`
 	expected = strings.TrimSpace(expected)
 
 	actual := strings.TrimSpace(Schema_to_d2(schema, []TableGroup{}))
 
 	if actual != expected {
-		t.Errorf("Expected %s, got %s", expected, actual)
+		t.Errorf("Expected \n%s\n, got \n%s", expected, actual)
 	}
 
 }
