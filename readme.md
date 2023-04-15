@@ -33,11 +33,14 @@ It is recommended to use the -l "tala" option, which renders ERD diagrams the be
 
 ## Features
 
+
 ### Basic ERD Diagram
 
 If you use the application with its defaults, and point at a MySQL database, you will get a basic ERD diagram of the database. This will include all tables, and all foreign keys which are recorded in the database information schema.
 
+
 ### Grouped Tables
+
 
 As part of diagramming a large database, you may want to introduce some manual groupings of tables. This is supported by the application, and can be done by adding the groups into a .json file and pointing the application at it's path using the variable `TABLE_GROUPS_PATH`. An example of this can be found in `example_table_groups.json` in the `cmd/` directory. Both relative and absolute paths are supported.
 
@@ -45,7 +48,9 @@ This can be of special use when refactoring a database, as you can group tables 
 
 You will need to enable the grouped tables behaviour by setting `TABLE_GROUPS` to 'true' in your environment variables.
 
+
 ### Virtual Links
+
 
 Sometimes you may want to show a relationship between two tables which is not recorded in the database schema. This is supported by the application, and can be done by adding the virtual links into a .json file and pointing the application at it's path using the variable `VIRTUAL_LINKS_PATH`. An example of this can be found in `example_virtual_links.json` in the `cmd/` directory. Both relative and absolute paths are supported.
 
@@ -53,7 +58,9 @@ This feature can be of use when you have either a not very well formed database,
 
 You will need to enable the virtual links behaviour by setting `VIRTUAL_LINKS` to 'true' in your environment variables.
 
+
 ### Minimalist Restrictions
+
 
 When diagramming a large database, you may find yourself hitting the limitations of your chosen layout engine. This is especially common when you are working with a database where the tables have lots of columns. This is reasonably common if you have a database with a low level of normalisation, intentional or otherwise. 
 
@@ -61,7 +68,9 @@ You can simplify this by restricting the application to only display the columns
 
 You can enable this by setting the environment variable `RESTRICTOR_TYPE` to 'minimal'. 
 
+
 ### User Permission Restrictions
+
 
 For purposes of access management, it can be of use to create a view of the tables and columns which are accessible to a particular user. This can be done by setting the environment variable `RESTRICTOR_TYPE` to 'user'. 
 
@@ -82,11 +91,10 @@ In the root directory:
 
 ## Roadmap
 
-- Find a way to run `d2 fmt` on the output of the program, for better formatting
-- Extend docs to include walkthrough for using `incredible-cli` for env var management
-- Optionally supply configuration options via commandline 
-- Optionally supply configuration options via .yaml config
-    - later on possibly extend to .json format also
+- Expand configuration options:
+    - Support commandline flags
+    - Support .yaml config
+    - Support .json config
 - Support other database flavours
     - MSSQL
     - PostgreSQL
