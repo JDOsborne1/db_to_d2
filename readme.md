@@ -4,12 +4,21 @@ This workspace is populated with modules which are oriented around diagramming t
 
 It is oriented in a hexagonal-like architecture. This is by no means an expert implementation, but I believe this is now complete enough to be useful, and structured well enough to extend by others.
 
-## Usage
+
+## Installation
+
+
+### Released
+
+The program was released in beta form here: https://github.com/JDOsborne1/db_to_d2/releases/download/v0.1-beta/db_to_d2 
+
+### Latest
+
+Below are the instructions if you want to use the latest version of the aplication available. 
 
 The following is assumed at this point in time: 
 - You have a recent version of `Go` installed
 - You have `git` installed
-- You have `d2` installed
 
 Currently there is no distributable, so you will need to:
 - `git clone git@gitlab.com:JDOsborne1/db_to_d2.git`
@@ -22,6 +31,12 @@ Alternatives:
 - Use the `go build` command to build the binary, and then run it directly from the `cmd/` directory.
 - Use the `go run` command to run the application directly from the `cmd/` directory.
 - Use any of the *passing* build artefacts in the Github Actions pipeline, which are available in the `Actions` tab of the repo.
+
+
+## Usage 
+
+The following is assumed at this point in time: 
+- You have `d2` installed
 
 The binary makes use of several environment variables to function, including for connection credentials. This is currently the only method supported, but please see the roadmap for future plans in this space.
 
