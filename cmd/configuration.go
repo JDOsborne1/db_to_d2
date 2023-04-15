@@ -4,6 +4,7 @@ import (
 	"core"
 	"encoding/json"
 	"fmt"
+	"io"
 	"os"
 	"virtual"
 )
@@ -12,14 +13,27 @@ import (
 // These are currently set by a file specified by the VIRTUAL_LINKS_PATH environment variable.
 // The file should be a json array of virtual links. See the virtual package for more information.
 func get_virtual_links() []virtual.VirtualLink {
-	links := []virtual.VirtualLink{}
-	links_json, err := os.ReadFile(os.Getenv("VIRTUAL_LINKS_PATH"))
+	links_reader, err := os.Open(os.Getenv("VIRTUAL_LINKS_PATH"))
 	if err != nil {
 		//TODO: Log error, or bubble up instead of printing to console
+		fmt.Println("Failed to open virtual links file")
+	}
+	links, err := read_virtual_links(links_reader)
+	if err != nil {
 		fmt.Println("Failed to read virtual links file")
 	}
-	json.Unmarshal(links_json, &links)
+
 	return links
+}
+
+func read_virtual_links(_input io.Reader) ([]virtual.VirtualLink, error) {
+	links := []virtual.VirtualLink{}
+	links_json, err := io.ReadAll(_input)
+	if err != nil {
+		return links, err
+	}
+	err = json.Unmarshal(links_json, &links)
+	return links, err
 }
 
 // get_table_groups returns the table groups for the program.
@@ -27,13 +41,28 @@ func get_virtual_links() []virtual.VirtualLink {
 // The file should be a json array of table groups. See the core package for more information.
 func get_table_groups() []core.TableGroup {
 	table_groups := []core.TableGroup{}
-	table_groups_json, err := os.ReadFile(os.Getenv("TABLE_GROUPS_PATH"))
+	table_groups_reader, err := os.Open(os.Getenv("TABLE_GROUPS_PATH"))
 	if err != nil {
 		//TODO: Log error, or bubble up instead of printing to console
 		fmt.Println("Failed to read table groups file")
 	}
-	json.Unmarshal(table_groups_json, &table_groups)
+
+	table_groups, err = read_table_groups(table_groups_reader)
+
+	if err != nil {
+		fmt.Println("Failed to read table groups file")
+	}
 	return table_groups
+}
+
+func read_table_groups(_input io.Reader) ([]core.TableGroup, error) {
+	table_groups := []core.TableGroup{}
+	table_groups_json, err := io.ReadAll(_input)
+	if err != nil {
+		return table_groups, err
+	}
+	err = json.Unmarshal(table_groups_json, &table_groups)
+	return table_groups, err
 }
 
 // get_designated_user returns the designated user for the program. Set by the DESIGNATED_USER environment variable.
