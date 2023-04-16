@@ -99,8 +99,8 @@ func get_options() options {
 	register_environent_variables()
 	//TODO: Add validation for options
 	return options{
-		use_virtual_links: viper.GetString("VIRTUAL_LINKS") == "true",
-		use_table_groups:  viper.GetString("TABLE_GROUPS") == "true",
+		use_virtual_links: viper.GetBool("VIRTUAL_LINKS"),
+		use_table_groups:  viper.GetBool("TABLE_GROUPS"),
 		restrictor_type:   viper.GetString("RESTRICTOR_TYPE"),
 		db_source_type:    viper.GetString("D2_TARGET_DB_TYPE"),
 	}
