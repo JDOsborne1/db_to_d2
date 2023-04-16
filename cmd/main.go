@@ -20,7 +20,7 @@ func main() {
 	case "mysql":
 		schema = mysql.Extract_schema()
 	default:
-		fmt.Println("Invalid db_source_type")
+		fmt.Println("Invalid db_source_type", options.db_source_type)
 		return
 	}
 
