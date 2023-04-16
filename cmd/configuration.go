@@ -108,37 +108,60 @@ func get_options() options {
 
 
 func register_commandline_flags() {
-	pflag.String("VirtualLinks", "false", "Use virtual links")
-	pflag.String("VirtualLinksPath", "example_virtual_links.json", "Path to virtual links file")
-	pflag.String("TableGroups", "false", "Use table groups")
-	pflag.String("TableGroupsPath", "example_table_groups.json", "Path to table groups file")
-	pflag.String("RestrictorType", "", "Restrictor type")
+	virtual_links := pflag.String("VirtualLinks", "", "Use virtual links")
+	virtual_links_path := pflag.String("VirtualLinksPath", "", "Path to virtual links file")
+	table_groups := pflag.String("TableGroups", "", "Use table groups")
+	table_groups_path := pflag.String("TableGroupsPath", "", "Path to table groups file")
+	restrictor_type := pflag.String("RestrictorType", "", "Restrictor type")
 	
-	pflag.String("D2TargetDbUser", "", "D2 target db user")
-	pflag.String("D2TargetDbPassword", "", "D2 target db password")
-	pflag.String("D2TargetDbHost", "", "D2 target db host")
-	pflag.String("D2TargetDbPort", "", "D2 target db port")
-	pflag.String("D2TargetDbName", "", "D2 target db name")
-	pflag.String("D2TargetDbType", "", "D2 target db type")
-	pflag.String("DesignatedUser", "", "Designated user")
+	db_user := pflag.String("D2TargetDbUser", "", "D2 target db user")
+	db_password := pflag.String("D2TargetDbPassword", "", "D2 target db password")
+	db_host := pflag.String("D2TargetDbHost", "", "D2 target db host")
+	db_port := pflag.String("D2TargetDbPort", "", "D2 target db port")
+	db_name := pflag.String("D2TargetDbName", "", "D2 target db name")
+	db_type := pflag.String("D2TargetDbType", "", "D2 target db type")
+	db_designated_user := pflag.String("DesignatedUser", "", "Designated user")
 	
 	pflag.Parse()
-	viper.RegisterAlias("VIRTUAL_LINKS", "VirtualLinks")
-	viper.RegisterAlias("VIRTUAL_LINKS_PATH", "VirtualLinksPath")
+	if *virtual_links != "" {
+		viper.RegisterAlias("VIRTUAL_LINKS", "VirtualLinks")
+	}
+	if *virtual_links_path != "" {
+		viper.RegisterAlias("VIRTUAL_LINKS_PATH", "VirtualLinksPath")
+	}
+	if *table_groups != "" {
 	viper.RegisterAlias("TABLE_GROUPS", "TableGroups")
-	viper.RegisterAlias("TABLE_GROUPS_PATH", "TableGroupsPath")
-	viper.RegisterAlias("RESTRICTOR_TYPE", "RestrictorType")
-	
-	viper.RegisterAlias("D2_TARGET_DB_USER", "D2TargetDbUser")
-	viper.RegisterAlias("D2_TARGET_DB_PASSWORD", "D2TargetDbPassword")
-	viper.RegisterAlias("D2_TARGET_DB_HOST", "D2TargetDbHost")
-	viper.RegisterAlias("D2_TARGET_DB_PORT", "D2TargetDbPort")
-	viper.RegisterAlias("D2_TARGET_DB_NAME", "D2TargetDbName")
-	viper.RegisterAlias("D2_TARGET_DB_TYPE", "D2TargetDbType")
-	viper.RegisterAlias("DESIGNATED_USER", "DesignatedUser")
-	
-	viper.BindPFlags(pflag.CommandLine)
+	}
 
+	if *table_groups_path != "" {
+	viper.RegisterAlias("TABLE_GROUPS_PATH", "TableGroupsPath")
+	}
+	if *restrictor_type != "" {
+	viper.RegisterAlias("RESTRICTOR_TYPE", "RestrictorType")
+	}
+	if *db_user != "" {
+	viper.RegisterAlias("D2_TARGET_DB_USER", "D2TargetDbUser")
+	}
+	if *db_password != "" {
+		viper.RegisterAlias("D2_TARGET_DB_PASSWORD", "D2TargetDbPassword")
+	}
+	if *db_host != "" {
+	viper.RegisterAlias("D2_TARGET_DB_HOST", "D2TargetDbHost")
+	}
+
+	if *db_port != "" {
+	viper.RegisterAlias("D2_TARGET_DB_PORT", "D2TargetDbPort")
+	}
+	if *db_name != "" {
+	viper.RegisterAlias("D2_TARGET_DB_NAME", "D2TargetDbName")
+	}
+	if *db_type != "" {
+	viper.RegisterAlias("D2_TARGET_DB_TYPE", "D2TargetDbType")
+	}
+	if *db_designated_user != "" {
+	viper.RegisterAlias("DESIGNATED_USER", "DesignatedUser")
+	}
+	viper.BindPFlags(pflag.CommandLine) 
 }
 
 func register_environent_variables() {
