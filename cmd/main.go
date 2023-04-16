@@ -6,6 +6,7 @@ import (
 	"mysql"
 	"virtual"
 
+	"github.com/spf13/pflag"
 	"github.com/spf13/viper"
 )
 
@@ -19,6 +20,21 @@ type options struct {
 }
 
 func main() {
+
+	pflag.String("VirtualLinks", "false", "Use virtual links")
+	pflag.String("VirtualLinksPath", "example_virtual_links.json", "Path to virtual links file")
+	pflag.String("TableGroups", "false", "Use table groups")
+	pflag.String("TableGroupsPath", "example_table_groups.json", "Path to table groups file")
+	pflag.String("RestrictorType", "", "Restrictor type")
+
+	pflag.Parse()
+	viper.RegisterAlias("VIRTUAL_LINKS", "VirtualLinks")
+	viper.RegisterAlias("VIRTUAL_LINKS_PATH", "VirtualLinksPath")
+	viper.RegisterAlias("TABLE_GROUPS", "TableGroups")
+	viper.RegisterAlias("TABLE_GROUPS_PATH", "TableGroupsPath")
+	viper.RegisterAlias("RESTRICTOR_TYPE", "RestrictorType")
+
+	viper.BindPFlags(pflag.CommandLine)
 
 	viper.BindEnv("D2_TARGET_DB_USER", "D2_TARGET_DB_USER")
 	viper.BindEnv("D2_TARGET_DB_PASSWORD", "D2_TARGET_DB_PASSWORD")
