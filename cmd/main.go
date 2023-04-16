@@ -26,6 +26,14 @@ func main() {
 	pflag.String("TableGroups", "false", "Use table groups")
 	pflag.String("TableGroupsPath", "example_table_groups.json", "Path to table groups file")
 	pflag.String("RestrictorType", "", "Restrictor type")
+	
+	pflag.String("D2TargetDbUser", "", "D2 target db user")
+	pflag.String("D2TargetDbPassword", "", "D2 target db password")
+	pflag.String("D2TargetDbHost", "", "D2 target db host")
+	pflag.String("D2TargetDbPort", "", "D2 target db port")
+	pflag.String("D2TargetDbName", "", "D2 target db name")
+	pflag.String("D2TargetDbType", "", "D2 target db type")
+	pflag.String("DesignatedUser", "", "Designated user")
 
 	pflag.Parse()
 	viper.RegisterAlias("VIRTUAL_LINKS", "VirtualLinks")
@@ -33,6 +41,14 @@ func main() {
 	viper.RegisterAlias("TABLE_GROUPS", "TableGroups")
 	viper.RegisterAlias("TABLE_GROUPS_PATH", "TableGroupsPath")
 	viper.RegisterAlias("RESTRICTOR_TYPE", "RestrictorType")
+
+	viper.RegisterAlias("D2_TARGET_DB_USER", "D2TargetDbUser")
+	viper.RegisterAlias("D2_TARGET_DB_PASSWORD", "D2TargetDbPassword")
+	viper.RegisterAlias("D2_TARGET_DB_HOST", "D2TargetDbHost")
+	viper.RegisterAlias("D2_TARGET_DB_PORT", "D2TargetDbPort")
+	viper.RegisterAlias("D2_TARGET_DB_NAME", "D2TargetDbName")
+	viper.RegisterAlias("D2_TARGET_DB_TYPE", "D2TargetDbType")
+	viper.RegisterAlias("DESIGNATED_USER", "DesignatedUser")
 
 	viper.BindPFlags(pflag.CommandLine)
 
