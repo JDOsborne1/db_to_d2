@@ -83,7 +83,16 @@ type options struct {
 	db_source_type    string // "mysql"
 }
 
-// get_options returns the options for the program. These are currently set by environment variables
+// get_options returns the options for the program. These are set by calling the relevant viper methods.
+// A notable consequence of this is that the variables are called at time of use, rather than at time of definition.
+// This shouldn't matter in the case of this program, but it's worth noting for future use.
+// Additionally, the options are set by the following methods, in order of precedence:
+//
+// 1. Command line flags
+//
+// 2. Environment variables
+//
+// 3. Default values
 func get_options() options {
 
 	register_commandline_flags()
