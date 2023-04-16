@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"mysql"
 	"virtual"
+
+	"github.com/spf13/viper"
 )
 
 // options is a struct that contains the options for the program.
@@ -17,6 +19,24 @@ type options struct {
 }
 
 func main() {
+
+	viper.BindEnv("D2_TARGET_DB_USER", "D2_TARGET_DB_USER")
+	viper.BindEnv("D2_TARGET_DB_PASSWORD", "D2_TARGET_DB_PASSWORD")
+	viper.BindEnv("D2_TARGET_DB_HOST", "D2_TARGET_DB_HOST")
+	viper.BindEnv("D2_TARGET_DB_PORT", "D2_TARGET_DB_PORT")
+	viper.BindEnv("D2_TARGET_DB_NAME", "D2_TARGET_DB_NAME")
+	viper.BindEnv("D2_TARGET_DB_TYPE", "D2_TARGET_DB_TYPE")
+
+	viper.BindEnv("VIRTUAL_LINKS", "VIRTUAL_LINKS")
+	viper.BindEnv("VIRTUAL_LINKS_PATH", "VIRTUAL_LINKS_PATH")
+
+	viper.BindEnv("TABLE_GROUPS", "TABLE_GROUPS")
+	viper.BindEnv("TABLE_GROUPS_PATH", "TABLE_GROUPS_PATH")
+
+	viper.BindEnv("RESTRICTOR_TYPE", "RESTRICTOR_TYPE")
+
+	viper.BindEnv("DESIGNATED_USER", "DESIGNATED_USER")
+
 
 	options := get_options()
 

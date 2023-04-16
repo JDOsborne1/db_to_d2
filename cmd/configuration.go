@@ -7,13 +7,15 @@ import (
 	"io"
 	"os"
 	"virtual"
+
+	"github.com/spf13/viper"
 )
 
 // get_virtual_links returns the virtual links for the program.
 // These are currently set by a file specified by the VIRTUAL_LINKS_PATH environment variable.
 // The file should be a json array of virtual links. See the virtual package for more information.
 func get_virtual_links() []virtual.VirtualLink {
-	links_reader, err := os.Open(os.Getenv("VIRTUAL_LINKS_PATH"))
+	links_reader, err := os.Open(viper.GetString("VIRTUAL_LINKS_PATH"))
 	if err != nil {
 		//TODO: Log error, or bubble up instead of printing to console
 		fmt.Println("Failed to open virtual links file")
@@ -41,7 +43,7 @@ func read_virtual_links(_input io.Reader) ([]virtual.VirtualLink, error) {
 // The file should be a json array of table groups. See the core package for more information.
 func get_table_groups() []core.TableGroup {
 	table_groups := []core.TableGroup{}
-	table_groups_reader, err := os.Open(os.Getenv("TABLE_GROUPS_PATH"))
+	table_groups_reader, err := os.Open(viper.GetString("TABLE_GROUPS_PATH"))
 	if err != nil {
 		//TODO: Log error, or bubble up instead of printing to console
 		fmt.Println("Failed to read table groups file")
@@ -68,16 +70,16 @@ func read_table_groups(_input io.Reader) ([]core.TableGroup, error) {
 // get_designated_user returns the designated user for the program. Set by the DESIGNATED_USER environment variable.
 // This is used to restrict the schema to the tables that the designated user has access to. See the mysql package for more information.
 func get_designated_user() string {
-	return os.Getenv("DESIGNATED_USER")
+	return viper.GetString("DESIGNATED_USER")
 }
 
 // get_options returns the options for the program. These are currently set by environment variables
 func get_options() options {
 	//TODO: Add validation for options
 	return options{
-		use_virtual_links: os.Getenv("VIRTUAL_LINKS") == "true",
-		use_table_groups:  os.Getenv("TABLE_GROUPS") == "true",
-		restrictor_type:   os.Getenv("RESTRICTOR_TYPE"),
-		db_source_type:    os.Getenv("D2_TARGET_DB_TYPE"),
+		use_virtual_links: viper.GetString("VIRTUAL_LINKS") == "true",
+		use_table_groups:  viper.GetString("TABLE_GROUPS") == "true",
+		restrictor_type:   viper.GetString("RESTRICTOR_TYPE"),
+		db_source_type:    viper.GetString("D2_TARGET_DB_TYPE"),
 	}
 }
