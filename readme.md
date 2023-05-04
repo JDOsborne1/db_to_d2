@@ -38,16 +38,54 @@ Alternatives:
 The following is assumed at this point in time: 
 - You have `d2` installed
 
-The binary makes use of several environment variables to function, including for connection credentials. This is currently the only method supported, but please see the roadmap for future plans in this space.
+The application makes use of the following variables, of which the *Bold* ones are required: 
+    - *D2 target db host*
+    - *D2 target db name*
+    - *D2 target db password*
+    - *D2 target db port*
+    - *D2 target db type*
+    - *D2 target db user*
+    - Designated user
+    - Restrictor type
+    - Use table groups
+    - Path to table groups file
+    - Use virtual links
+    - Path to virtual links file
 
-An example of all the possible environment variables which you can use, along with possible options, can be found in `connection_vars.sh` in the root of the repo. At this stage, only the DB connection variables are required for the program to function, all the others have workable defaults. 
+These are currently supported to be supplied by any combination of _environment variables_ and _command line flags_. Please consult the relevant section below to see how to supply the information.
 
 You will then want to run `db_to_d2` which will output the d2 of the database you've pointed it at. You can then pipe this `>` into a .d2 file which you can then render with the d2 commandline tool. 
 
-It is recommended to use the -l "tala" option, which renders ERD diagrams the best, but this assumes that you also have `tala` installed, and that you either have a license, or aren't disturbed by the 'UNLICENSED' watermark.
+When using `d2` it is recommended to use the -l "tala" option, which renders ERD diagrams the best, but this assumes that you also have `tala` installed, and that you either have a license, or aren't disturbed by the 'UNLICENSED' watermark.
+
+
+### Environment Variables 
+
+An example of all the possible environment variables which you can use, along with possible options, can be found in `connection_vars.sh` in the root of the repo. 
+
+
+### Commandline Arguments
+
+The below is taken from the help dialogue for the program, found by supplying `-h` or `--help` as a flag.
+
+```
+Usage of ./db_to_d2:
+      --D2TargetDbHost string       db login host
+      --D2TargetDbName string       db login name
+      --D2TargetDbPassword string   db login password
+      --D2TargetDbPort string       db login port
+      --D2TargetDbType string       db login type
+      --D2TargetDbUser string       db login user 
+      --DesignatedUser string       User to investigate, format: 'username'@'hostname'
+      --RestrictorType string       Restrictor type (minimal/user/none)
+      --TableGroups string          Use table groups (true/false)
+      --TableGroupsPath string      Path to table groups file
+      --VirtualLinks string         Use virtual links (true/false)
+      --VirtualLinksPath string     Path to virtual links file
+pflag: help requested
+```
 
 ## Features
-
 
 ### Basic ERD Diagram
 

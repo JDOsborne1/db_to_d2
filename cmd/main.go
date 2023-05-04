@@ -7,14 +7,8 @@ import (
 	"virtual"
 )
 
-// options is a struct that contains the options for the program.
-// TODO: Add validation for options
-type options struct {
-	use_virtual_links bool
-	use_table_groups  bool
-	restrictor_type   string // "user" or "minimal"
-	db_source_type    string // "mysql"
-}
+
+
 
 func main() {
 
@@ -26,7 +20,7 @@ func main() {
 	case "mysql":
 		schema = mysql.Extract_schema()
 	default:
-		fmt.Println("Invalid db_source_type")
+		fmt.Println("Invalid db_source_type", options.db_source_type)
 		return
 	}
 
