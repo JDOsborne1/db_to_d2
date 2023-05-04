@@ -108,19 +108,19 @@ func get_options() options {
 
 
 func register_commandline_flags() {
-	virtual_links := pflag.String("VirtualLinks", "", "Use virtual links")
+	virtual_links := pflag.String("VirtualLinks", "", "Use virtual links (true/false)")
 	virtual_links_path := pflag.String("VirtualLinksPath", "", "Path to virtual links file")
-	table_groups := pflag.String("TableGroups", "", "Use table groups")
+	table_groups := pflag.String("TableGroups", "", "Use table groups (true/false)")
 	table_groups_path := pflag.String("TableGroupsPath", "", "Path to table groups file")
-	restrictor_type := pflag.String("RestrictorType", "", "Restrictor type")
+	restrictor_type := pflag.String("RestrictorType", "", "Restrictor type (minimal/user/none)")
 	
-	db_user := pflag.String("D2TargetDbUser", "", "D2 target db user")
-	db_password := pflag.String("D2TargetDbPassword", "", "D2 target db password")
-	db_host := pflag.String("D2TargetDbHost", "", "D2 target db host")
-	db_port := pflag.String("D2TargetDbPort", "", "D2 target db port")
-	db_name := pflag.String("D2TargetDbName", "", "D2 target db name")
-	db_type := pflag.String("D2TargetDbType", "", "D2 target db type")
-	db_designated_user := pflag.String("DesignatedUser", "", "Designated user")
+	db_user := pflag.String("D2TargetDbUser", "", "db login user ")
+	db_password := pflag.String("D2TargetDbPassword", "", "db login password")
+	db_host := pflag.String("D2TargetDbHost", "", "db login host")
+	db_port := pflag.String("D2TargetDbPort", "", "db login port")
+	db_name := pflag.String("D2TargetDbName", "", "db login name")
+	db_type := pflag.String("D2TargetDbType", "", "db login type")
+	db_designated_user := pflag.String("DesignatedUser", "", "User to investigate, format: 'username'@'hostname'")
 	
 	pflag.Parse()
 	if *virtual_links != "" {
