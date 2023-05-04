@@ -4,9 +4,9 @@ import (
 	"core"
 	"database/sql"
 	"fmt"
-	"os"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/spf13/viper"
 )
 
 // connect_to_db connects to the database specified by the environment variables
@@ -18,11 +18,11 @@ import (
 // The database must be a MySQL database.
 // Returns a pointer to the database and an error if the connection failed.
 func connect_to_db() (*sql.DB, error) {
-	user := os.Getenv("D2_TARGET_DB_USER")
-	password := os.Getenv("D2_TARGET_DB_PASSWORD")
-	host := os.Getenv("D2_TARGET_DB_HOST")
-	port := os.Getenv("D2_TARGET_DB_PORT")
-	dbname := os.Getenv("D2_TARGET_DB_NAME")
+	user := viper.GetString("D2_TARGET_DB_USER")
+	password := viper.GetString("D2_TARGET_DB_PASSWORD")
+	host := viper.GetString("D2_TARGET_DB_HOST")
+	port := viper.GetString("D2_TARGET_DB_PORT")
+	dbname := viper.GetString("D2_TARGET_DB_NAME")
 	essential_vars := []string{user, password, host, port, dbname}
 	for _, v := range essential_vars {
 		if v == "" {
@@ -131,7 +131,7 @@ func Extract_schema() core.Schema {
 	defer db.Close()
 
 	// Retrieve the schema from the database
-	rows := information_schema_from(db, os.Getenv("D2_TARGET_DB_NAME"))
+	rows := information_schema_from(db, viper.GetString("D2_TARGET_DB_NAME"))
 
 	// Build the data structure
 	schema := structured_schema_from(rows)
