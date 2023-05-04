@@ -70,17 +70,17 @@ The below is taken from the help dialogue for the program, found by supplying `-
 
 ```
 Usage of ./db_to_d2:
-      --D2TargetDbHost string       D2 target db host
-      --D2TargetDbName string       D2 target db name
-      --D2TargetDbPassword string   D2 target db password
-      --D2TargetDbPort string       D2 target db port
-      --D2TargetDbType string       D2 target db type
-      --D2TargetDbUser string       D2 target db user
-      --DesignatedUser string       Designated user
-      --RestrictorType string       Restrictor type
-      --TableGroups string          Use table groups
+      --D2TargetDbHost string       db login host
+      --D2TargetDbName string       db login name
+      --D2TargetDbPassword string   db login password
+      --D2TargetDbPort string       db login port
+      --D2TargetDbType string       db login type
+      --D2TargetDbUser string       db login user 
+      --DesignatedUser string       User to investigate, format: 'username'@'hostname'
+      --RestrictorType string       Restrictor type (minimal/user/none)
+      --TableGroups string          Use table groups (true/false)
       --TableGroupsPath string      Path to table groups file
-      --VirtualLinks string         Use virtual links
+      --VirtualLinks string         Use virtual links (true/false)
       --VirtualLinksPath string     Path to virtual links file
 pflag: help requested
 ```
