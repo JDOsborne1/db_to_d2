@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Converts a schema to a string containing corresponding d2 definitions. 
+// Converts a schema to a string containing corresponding d2 definitions.
 func Schema_to_d2(schema Schema, _groups []TableGroup) string {
 	var builder strings.Builder
 	groupings := make(map[string][]Table)
@@ -51,7 +51,25 @@ func Schema_to_d2(schema Schema, _groups []TableGroup) string {
 	for _, table := range schema.Tables {
 		for _, column := range table.Columns {
 			if column.Reference != nil {
-				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s", wrap_name_in_group(column.Reference.Table, _groups), column.Reference.Column, wrap_name_in_group(table.Name, _groups), column.Name))
+				// This is a vile hack which has the unfortunate trait of making the program work.
+				// Only this arrangement allows for multiple virtual connections from a common reference
+				// point without inverting all the original foreign keys from the information schema.
+				// This should be rectified in a re-write of the internals of the mysql or virtual package
+				if column.Key == "VIRTUAL" {
+					builder.WriteString(fmt.Sprintf(
+						"%s.%s -> %s.%s",
+						wrap_name_in_group(column.Reference.Table, _groups),
+						column.Reference.Column,
+						wrap_name_in_group(table.Name, _groups),
+						column.Name))
+				} else {
+					builder.WriteString(fmt.Sprintf(
+						"%s.%s -> %s.%s",
+						wrap_name_in_group(table.Name, _groups),
+						column.Name,
+						wrap_name_in_group(column.Reference.Table, _groups),
+						column.Reference.Column))
+				}
 				builder.WriteString(" {\n")
 				builder.WriteString("  target-arrowhead: {shape: cf-many}\n")
 				if column.Key == "VIRTUAL" {
