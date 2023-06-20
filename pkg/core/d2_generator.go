@@ -51,7 +51,7 @@ func Schema_to_d2(schema Schema, _groups []TableGroup) string {
 	for _, table := range schema.Tables {
 		for _, column := range table.Columns {
 			if column.Reference != nil {
-				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s", wrap_name_in_group(table.Name, _groups), column.Name, wrap_name_in_group(column.Reference.Table, _groups), column.Reference.Column))
+				builder.WriteString(fmt.Sprintf("%s.%s -> %s.%s", wrap_name_in_group(column.Reference.Table, _groups), column.Reference.Column, wrap_name_in_group(table.Name, _groups), column.Name))
 				builder.WriteString(" {\n")
 				builder.WriteString("  target-arrowhead: {shape: cf-many}\n")
 				if column.Key == "VIRTUAL" {
