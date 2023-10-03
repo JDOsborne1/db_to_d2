@@ -121,6 +121,8 @@ You can simplify this by restricting the application to only display the columns
 
 You can enable this by setting the environment variable `RESTRICTOR_TYPE` to 'minimal'. 
 
+If this still doesn't allow you to fully render your database diagram in d2, you can make use of the `D2_TIMEOUT` variable. (using d2 v0.6 or greater)
+
 
 ### User Permission Restrictions
 
@@ -145,7 +147,7 @@ In the root directory:
 ## Roadmap
 
 - Expand configuration options:
-    - Support commandline flags
+    - ~Support commandline flags~
     - Support .yaml config
     - Support .json config
 - Support other database flavours
