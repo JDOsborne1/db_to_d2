@@ -12,11 +12,26 @@ import (
 	"github.com/spf13/viper"
 )
 
+const (
+	env_user             = "D2_TARGET_DB_USER"
+	env_password         = "D2_TARGET_DB_PASSWORD"
+	env_host             = "D2_TARGET_DB_HOST"
+	env_port             = "D2_TARGET_DB_PORT"
+	env_name             = "D2_TARGET_DB_NAME"
+	env_type             = "D2_TARGET_DB_TYPE"
+	env_links            = "VIRTUAL_LINKS"
+	env_links_path       = "VIRTUAL_LINKS_PATH"
+	env_groups           = "TABLE_GROUPS"
+	env_groups_path      = "TABLE_GROUPS_PATH"
+	env_restriction      = "RESTRICTOR_TYPE"
+	env_perspective_user = "DESIGNATED_USER"
+)
+
 // get_virtual_links returns the virtual links for the program.
 // These are currently set by a file specified by the VIRTUAL_LINKS_PATH environment variable.
 // The file should be a json array of virtual links. See the virtual package for more information.
 func get_virtual_links() []virtual.VirtualLink {
-	links_reader, err := os.Open(viper.GetString("VIRTUAL_LINKS_PATH"))
+	links_reader, err := os.Open(viper.GetString(env_links_path))
 	if err != nil {
 		//TODO: Log error, or bubble up instead of printing to console
 		fmt.Println("Failed to open virtual links file")
@@ -43,7 +58,7 @@ func read_virtual_links(_input io.Reader) ([]virtual.VirtualLink, error) {
 // These are currently set by a file specified by the TABLE_GROUPS_PATH environment variable.
 // The file should be a json array of table groups. See the core package for more information.
 func get_table_groups() []core.TableGroup {
-	table_groups_reader, err := os.Open(viper.GetString("TABLE_GROUPS_PATH"))
+	table_groups_reader, err := os.Open(viper.GetString(env_groups_path))
 	if err != nil {
 		//TODO: Log error, or bubble up instead of printing to console
 		fmt.Println("Failed to read table groups file")
@@ -70,7 +85,7 @@ func read_table_groups(_input io.Reader) ([]core.TableGroup, error) {
 // get_designated_user returns the designated user for the program. Set by the DESIGNATED_USER environment variable.
 // This is used to restrict the schema to the tables that the designated user has access to. See the mysql package for more information.
 func get_designated_user() string {
-	return viper.GetString("DESIGNATED_USER")
+	return viper.GetString(env_perspective_user)
 }
 
 // options is a struct that contains the options for the program.
@@ -98,10 +113,10 @@ func get_options() options {
 	register_environent_variables()
 	//TODO: Add validation for options
 	return options{
-		use_virtual_links: viper.GetBool("VIRTUAL_LINKS"),
-		use_table_groups:  viper.GetBool("TABLE_GROUPS"),
-		restrictor_type:   viper.GetString("RESTRICTOR_TYPE"),
-		db_source_type:    viper.GetString("D2_TARGET_DB_TYPE"),
+		use_virtual_links: viper.GetBool(env_links),
+		use_table_groups:  viper.GetBool(env_groups),
+		restrictor_type:   viper.GetString(env_restriction),
+		db_source_type:    viper.GetString(env_type),
 	}
 }
 
@@ -122,62 +137,62 @@ func register_commandline_flags() {
 
 	pflag.Parse()
 	if *virtual_links != "" {
-		viper.RegisterAlias("VIRTUAL_LINKS", "VirtualLinks")
+		viper.RegisterAlias(env_links, "VirtualLinks")
 	}
 	if *virtual_links_path != "" {
-		viper.RegisterAlias("VIRTUAL_LINKS_PATH", "VirtualLinksPath")
+		viper.RegisterAlias(env_links_path, "VirtualLinksPath")
 	}
 	if *table_groups != "" {
-		viper.RegisterAlias("TABLE_GROUPS", "TableGroups")
+		viper.RegisterAlias(env_groups, "TableGroups")
 	}
 
 	if *table_groups_path != "" {
-		viper.RegisterAlias("TABLE_GROUPS_PATH", "TableGroupsPath")
+		viper.RegisterAlias(env_groups_path, "TableGroupsPath")
 	}
 	if *restrictor_type != "" {
-		viper.RegisterAlias("RESTRICTOR_TYPE", "RestrictorType")
+		viper.RegisterAlias(env_restriction, "RestrictorType")
 	}
 	if *db_user != "" {
-		viper.RegisterAlias("D2_TARGET_DB_USER", "D2TargetDbUser")
+		viper.RegisterAlias(env_user, "D2TargetDbUser")
 	}
 	if *db_password != "" {
-		viper.RegisterAlias("D2_TARGET_DB_PASSWORD", "D2TargetDbPassword")
+		viper.RegisterAlias(env_password, "D2TargetDbPassword")
 	}
 	if *db_host != "" {
-		viper.RegisterAlias("D2_TARGET_DB_HOST", "D2TargetDbHost")
+		viper.RegisterAlias(env_host, "D2TargetDbHost")
 	}
 
 	if *db_port != "" {
-		viper.RegisterAlias("D2_TARGET_DB_PORT", "D2TargetDbPort")
+		viper.RegisterAlias(env_port, "D2TargetDbPort")
 	}
 	if *db_name != "" {
-		viper.RegisterAlias("D2_TARGET_DB_NAME", "D2TargetDbName")
+		viper.RegisterAlias(env_name, "D2TargetDbName")
 	}
 	if *db_type != "" {
-		viper.RegisterAlias("D2_TARGET_DB_TYPE", "D2TargetDbType")
+		viper.RegisterAlias(env_type, "D2TargetDbType")
 	}
 	if *db_designated_user != "" {
-		viper.RegisterAlias("DESIGNATED_USER", "DesignatedUser")
+		viper.RegisterAlias(env_perspective_user, "DesignatedUser")
 	}
 	viper.BindPFlags(pflag.CommandLine)
 }
 
 func register_environent_variables() {
-	viper.BindEnv("D2_TARGET_DB_USER")
-	viper.BindEnv("D2_TARGET_DB_PASSWORD")
-	viper.BindEnv("D2_TARGET_DB_HOST")
-	viper.BindEnv("D2_TARGET_DB_PORT")
-	viper.BindEnv("D2_TARGET_DB_NAME")
-	viper.BindEnv("D2_TARGET_DB_TYPE")
+	viper.BindEnv(env_user)
+	viper.BindEnv(env_password)
+	viper.BindEnv(env_host)
+	viper.BindEnv(env_port)
+	viper.BindEnv(env_name)
+	viper.BindEnv(env_type)
 
-	viper.BindEnv("VIRTUAL_LINKS")
-	viper.BindEnv("VIRTUAL_LINKS_PATH")
+	viper.BindEnv(env_links)
+	viper.BindEnv(env_links_path)
 
-	viper.BindEnv("TABLE_GROUPS")
-	viper.BindEnv("TABLE_GROUPS_PATH")
+	viper.BindEnv(env_groups)
+	viper.BindEnv(env_groups_path)
 
-	viper.BindEnv("RESTRICTOR_TYPE")
+	viper.BindEnv(env_restriction)
 
-	viper.BindEnv("DESIGNATED_USER")
+	viper.BindEnv(env_perspective_user)
 
 }

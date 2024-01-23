@@ -50,7 +50,7 @@ func TestAugment_schema(t *testing.T) {
 				Columns: []core.Column{
 					{
 						Name: "col1",
-						Key:  "VIRTUAL",
+						Key:  core.Virtual_key,
 						Reference: &core.Reference{
 							Table:  "table2",
 							Column: "col1",
@@ -67,7 +67,7 @@ func TestAugment_schema(t *testing.T) {
 				Columns: []core.Column{
 					{
 						Name:  "col1",
-						Key:   "VIRTUAL",
+						Key:   core.Virtual_key,
 						Extra: "Virtual link from table1.col1",
 					},
 					{

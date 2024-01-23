@@ -9,6 +9,16 @@ import (
 	"github.com/spf13/viper"
 )
 
+// TODO - Merge this definition with the one in Configuration (Likely needs a config module)
+
+const (
+	env_user     = "D2_TARGET_DB_USER"
+	env_password = "D2_TARGET_DB_PASSWORD"
+	env_host     = "D2_TARGET_DB_HOST"
+	env_port     = "D2_TARGET_DB_PORT"
+	env_name     = "D2_TARGET_DB_NAME"
+)
+
 // connect_to_db connects to the database specified by the environment variables
 // - D2_TARGET_DB_USER,
 // - D2_TARGET_DB_PASSWORD,
@@ -18,11 +28,11 @@ import (
 // The database must be a MySQL database.
 // Returns a pointer to the database and an error if the connection failed.
 func connect_to_db() (*sql.DB, error) {
-	user := viper.GetString("D2_TARGET_DB_USER")
-	password := viper.GetString("D2_TARGET_DB_PASSWORD")
-	host := viper.GetString("D2_TARGET_DB_HOST")
-	port := viper.GetString("D2_TARGET_DB_PORT")
-	dbname := viper.GetString("D2_TARGET_DB_NAME")
+	user := viper.GetString(env_user)
+	password := viper.GetString(env_password)
+	host := viper.GetString(env_host)
+	port := viper.GetString(env_port)
+	dbname := viper.GetString(env_name)
 	essential_vars := []string{user, password, host, port, dbname}
 	for _, v := range essential_vars {
 		if v == "" {
@@ -131,7 +141,7 @@ func Extract_schema() core.Schema {
 	defer db.Close()
 
 	// Retrieve the schema from the database
-	rows := information_schema_from(db, viper.GetString("D2_TARGET_DB_NAME"))
+	rows := information_schema_from(db, viper.GetString(env_name))
 
 	// Build the data structure
 	schema := structured_schema_from(rows)

@@ -52,7 +52,7 @@ func augment_columns_source(_table core.Table, _links VirtualLink) core.Table {
 				Table:  _links.ReferencedTable,
 				Column: _links.ReferencedColumn,
 			}
-			column.Key = "VIRTUAL"
+			column.Key = core.Virtual_key
 			column.Extra = "Virtual link to " + _links.ReferencedTable + "." + _links.ReferencedColumn
 		}
 		new_columns = append(new_columns, column)
@@ -65,7 +65,7 @@ func augment_columns_reference(_table core.Table, _links VirtualLink) core.Table
 	new_columns := []core.Column{}
 	for _, column := range _table.Columns {
 		if column.Name == _links.ReferencedColumn {
-			column.Key = "VIRTUAL"
+			column.Key = core.Virtual_key
 			column.Extra = "Virtual link from " + _links.SourceTable + "." + _links.SourceColumn
 		}
 		new_columns = append(new_columns, column)

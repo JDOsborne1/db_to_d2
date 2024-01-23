@@ -5,6 +5,8 @@ import (
 	"strings"
 )
 
+const Virtual_key string = "VIRTUAL"
+
 // Converts a schema to a string containing corresponding d2 definitions.
 func Schema_to_d2(schema Schema, _groups []TableGroup) string {
 	var builder strings.Builder
@@ -55,7 +57,7 @@ func Schema_to_d2(schema Schema, _groups []TableGroup) string {
 				// Only this arrangement allows for multiple virtual connections from a common reference
 				// point without inverting all the original foreign keys from the information schema.
 				// This should be rectified in a re-write of the internals of the mysql or virtual package
-				if column.Key == "VIRTUAL" {
+				if column.Key == Virtual_key {
 					builder.WriteString(fmt.Sprintf(
 						"%s.%s -> %s.%s",
 						wrap_name_in_group(column.Reference.Table, _groups),
@@ -72,7 +74,7 @@ func Schema_to_d2(schema Schema, _groups []TableGroup) string {
 				}
 				builder.WriteString(" {\n")
 				builder.WriteString("  target-arrowhead: {shape: cf-many}\n")
-				if column.Key == "VIRTUAL" {
+				if column.Key == Virtual_key {
 					builder.WriteString("  style: {stroke-dash: 3}")
 				}
 				builder.WriteString("}")
@@ -100,7 +102,7 @@ func table_to_d2(_table Table) string {
 			builder.WriteString(" {constraint: foreign_key}")
 		case "UNK":
 			builder.WriteString(" {constraint: unique}")
-		case "VIRTUAL":
+		case Virtual_key:
 			builder.WriteString(" {constraint: foreign_key}")
 		}
 

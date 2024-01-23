@@ -8,18 +8,18 @@ import (
 )
 
 func TestGet_virtual_links(t *testing.T) {
-	os.Setenv("VIRTUAL_LINKS_PATH", "test")
-	viper.BindEnv("VIRTUAL_LINKS_PATH", "VIRTUAL_LINKS_PATH")
-	if viper.Get("VIRTUAL_LINKS_PATH") != "test" {
+	os.Setenv(env_links_path, "test")
+	viper.BindEnv(env_links_path)
+	if viper.Get(env_links_path) != "test" {
 		t.Log("Failed to set VIRTUAL_LINKS_PATH")
 		t.Fail()
 	}
 }
 
 func Test_boolean_flags(t *testing.T) {
-	os.Setenv("VIRTUAL_LINKS", "true")
-	viper.BindEnv("VIRTUAL_LINKS", "VIRTUAL_LINKS")
-	if !viper.GetBool("VIRTUAL_LINKS") {
+	os.Setenv(env_links, "true")
+	viper.BindEnv(env_links)
+	if !viper.GetBool(env_links) {
 		t.Log("Failed to set VIRTUAL_LINKS")
 		t.Fail()
 	}
