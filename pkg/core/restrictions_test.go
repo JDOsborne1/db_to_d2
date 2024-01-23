@@ -95,7 +95,7 @@ var example_schema = Schema{
 }
 
 func get_table_names(_input Schema) []string {
-	var output []string
+	output := []string{}
 	for _, table := range _input.Tables {
 		output = append(output, table.Name)
 	}
@@ -103,7 +103,7 @@ func get_table_names(_input Schema) []string {
 }
 
 func get_column_names(_input Table) []string {
-	var output []string
+	output := []string{}
 	for _, column := range _input.Columns {
 		output = append(output, column.Name)
 	}
