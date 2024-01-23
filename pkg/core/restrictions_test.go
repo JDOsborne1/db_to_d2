@@ -112,10 +112,10 @@ func get_column_names(_input Table) []string {
 
 // TestRestrictionsIdentity is a basic test that checks that the identity function returns the same value as the input.
 func TestRestrictionsIdentity(t *testing.T) {
-	//Execute test
+	// Execute test
 	actual := Restrict(example_schema, Standard)
 
-	//Compare actual to expected
+	// Compare actual to expected
 	if !reflect.DeepEqual(actual, example_schema) {
 		t.Log("Identity function failed to return the same value as the input.")
 		t.Fail()

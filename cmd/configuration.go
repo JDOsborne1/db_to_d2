@@ -43,14 +43,13 @@ func read_virtual_links(_input io.Reader) ([]virtual.VirtualLink, error) {
 // These are currently set by a file specified by the TABLE_GROUPS_PATH environment variable.
 // The file should be a json array of table groups. See the core package for more information.
 func get_table_groups() []core.TableGroup {
-	table_groups := []core.TableGroup{}
 	table_groups_reader, err := os.Open(viper.GetString("TABLE_GROUPS_PATH"))
 	if err != nil {
 		//TODO: Log error, or bubble up instead of printing to console
 		fmt.Println("Failed to read table groups file")
 	}
 
-	table_groups, err = read_table_groups(table_groups_reader)
+	table_groups, err := read_table_groups(table_groups_reader)
 
 	if err != nil {
 		fmt.Println("Failed to read table groups file")

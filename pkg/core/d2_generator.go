@@ -93,13 +93,14 @@ func table_to_d2(_table Table) string {
 	for _, column := range _table.Columns {
 		builder.WriteString(fmt.Sprintf("  %s: %s", column.Name, column.Type))
 
-		if column.Key == "PRI" {
+		switch column.Key {
+		case "PRI":
 			builder.WriteString(" {constraint: primary_key}")
-		} else if column.Key == "MUL" {
+		case "MUL":
 			builder.WriteString(" {constraint: foreign_key}")
-		} else if column.Key == "UNK" {
+		case "UNK":
 			builder.WriteString(" {constraint: unique}")
-		} else if column.Key == "VIRTUAL" {
+		case "VIRTUAL":
 			builder.WriteString(" {constraint: foreign_key}")
 		}
 

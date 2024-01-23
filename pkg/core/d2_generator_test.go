@@ -9,8 +9,8 @@ import (
 )
 
 func simple_formatter(_input string) string {
-	_input = strings.Replace(_input, "\t", "", -1)
-	_input = strings.Replace(_input, "\n\n", "\n", -1)
+	_input = strings.ReplaceAll(_input, "\t", "")
+	_input = strings.ReplaceAll(_input, "\n\n", "\n")
 	_input = strings.TrimSpace(_input)
 	return _input
 }
