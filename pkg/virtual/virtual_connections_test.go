@@ -19,7 +19,7 @@ func TestAugment_schema(t *testing.T) {
 					{
 						Name: "col2",
 					},
-				},		
+				},
 			},
 			{
 				Name: "table2",
@@ -36,9 +36,9 @@ func TestAugment_schema(t *testing.T) {
 	}
 	experimental_links := []VirtualLink{
 		{
-			SourceTable: "table1",
-			SourceColumn: "col1",
-			ReferencedTable: "table2",
+			SourceTable:      "table1",
+			SourceColumn:     "col1",
+			ReferencedTable:  "table2",
 			ReferencedColumn: "col1",
 		},
 	}
@@ -50,9 +50,9 @@ func TestAugment_schema(t *testing.T) {
 				Columns: []core.Column{
 					{
 						Name: "col1",
-						Key: "VIRTUAL",
+						Key:  "VIRTUAL",
 						Reference: &core.Reference{
-							Table: "table2",
+							Table:  "table2",
 							Column: "col1",
 						},
 						Extra: "Virtual link to table2.col1",
@@ -60,14 +60,14 @@ func TestAugment_schema(t *testing.T) {
 					{
 						Name: "col2",
 					},
-				},		
+				},
 			},
 			{
 				Name: "table2",
 				Columns: []core.Column{
 					{
-						Name: "col1",
-						Key: "VIRTUAL",
+						Name:  "col1",
+						Key:   "VIRTUAL",
 						Extra: "Virtual link from table1.col1",
 					},
 					{
@@ -83,6 +83,5 @@ func TestAugment_schema(t *testing.T) {
 	if !reflect.DeepEqual(actual, expected) {
 		t.Errorf("Expected %v, got %v", expected, actual)
 	}
-
 
 }

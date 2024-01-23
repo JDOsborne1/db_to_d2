@@ -6,14 +6,13 @@ package core
 import (
 	"strings"
 	"testing"
-
 )
 
 func simple_formatter(_input string) string {
 	_input = strings.Replace(_input, "\t", "", -1)
 	_input = strings.Replace(_input, "\n\n", "\n", -1)
 	_input = strings.TrimSpace(_input)
-	return _input 
+	return _input
 }
 
 func Test_d2_generator(t *testing.T) {
@@ -48,7 +47,7 @@ func Test_d2_generator(t *testing.T) {
 		},
 	}
 
-expected := `
+	expected := `
 table1: {
   		shape: sql_table
   col1: int
@@ -71,4 +70,3 @@ table2: {
 	}
 
 }
-

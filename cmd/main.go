@@ -7,9 +7,6 @@ import (
 	"virtual"
 )
 
-
-
-
 func main() {
 
 	options := get_options()

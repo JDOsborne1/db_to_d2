@@ -142,8 +142,8 @@ func TestRestrictionsMinimalist(t *testing.T) {
 
 }
 
-// Simple example of a restriction function. This is intended to simulate the scenario where a user has been 
-// restricted to not be able to see the PII (Personally Identifiable Information) of other users. But they can 
+// Simple example of a restriction function. This is intended to simulate the scenario where a user has been
+// restricted to not be able to see the PII (Personally Identifiable Information) of other users. But they can
 // still access the user_id fields for analysis purposes.
 func example_permission_restrictor_analyst(_table Table, _column Column) bool {
 	return _column.Name == "username" || _column.Name == "email"
@@ -170,10 +170,9 @@ func TestRestrictionsCustom(t *testing.T) {
 
 	profile_service := Restrict(example_schema, example_permission_restrictor_user_profile)
 
-	if !(equal_set(get_table_names(profile_service), []string{"users","meta"})) {
+	if !(equal_set(get_table_names(profile_service), []string{"users", "meta"})) {
 		t.Log("Custom cleared inappropriate tables.")
 		t.Fail()
 	}
 
-	
 }
