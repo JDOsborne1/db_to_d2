@@ -21,7 +21,7 @@ The following is assumed at this point in time:
 - You have `git` installed
 
 Currently there is no distributable, so you will need to:
-- `git clone git@gitlab.com:JDOsborne1/db_to_d2.git`
+- `git clone git@github.com:JDOsborne1/db_to_d2.git`
 - `cd cmd/`
 - `go install`
 
